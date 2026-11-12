@@ -94,6 +94,14 @@ composited by the app rather than cropped by it.
 - Minimum sizes: badge 32 px, bust 64 px, wordmark 96 px wide.
 - On honey, the mark is never placed; honey is for text and controls.
 
+## The link card
+
+`card.png` (1200×630) is the picture a pasted invite shows: mascot badge left, wordmark,
+honey rule, tagline, address. Rendered from `src/card.html` like every other asset, so it is
+reproducible. The proxy injects it as `og:image` with explicit width and height, sets
+`twitter:card` to `summary_large_image`, and carries the tagline as `og:description` — the
+first place the line is published, since no branding field holds a description.
+
 ## Voice
 
 One sentence, used wherever the instance describes itself: **"A private forest for people
