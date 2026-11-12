@@ -1,0 +1,25 @@
+Wizardry
+=======
+
+Wizardry is a fork of Fluxer.
+
+    Fluxer — https://github.com/fluxerapp/fluxer
+    Copyright the Fluxer contributors
+    Licensed under the GNU Affero General Public License, version 3 or later.
+
+This repository contains the Fluxer source code with its product identity changed. The changes
+are described file by file in REBRAND.md. No other modifications have been made to the code at
+the time of the import.
+
+Wizardry is distributed under the same licence as the original work, AGPL-3.0-or-later. The full
+licence text is in LICENSE. Because Wizardry is a network service, section 13 of that licence
+applies: anyone interacting with a modified version over a network is entitled to be offered its
+corresponding source.
+
+The name "Wizardry" and any artwork added for it are not part of the Fluxer project and are not
+endorsed by it. The artwork currently shipped in fluxer_static/ (logo, wordmark, symbol, icons,
+badges, default avatars) is Fluxer's, licensed CC BY-SA 4.0 under fluxer_static/LICENSE, and is
+included unmodified. It must be replaced before Wizardry is presented as a distinct product.
+
+Fluxer's name and marks policy applies to Fluxer's marks:
+https://github.com/fluxerapp/fluxer/blob/main/.github/GOVERNANCE.md#name-and-marks

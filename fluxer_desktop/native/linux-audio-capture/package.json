@@ -1,0 +1,23 @@
+{
+	"name": "@fluxer/linux-audio-capture",
+	"version": "0.0.0",
+	"description": "",
+	"private": true,
+	"license": "AGPL-3.0-or-later",
+	"os": [
+		"linux"
+	],
+	"cpu": [
+		"x64",
+		"arm64"
+	],
+	"main": "index.js",
+	"types": "index.d.ts",
+	"files": [
+		"index.js",
+		"index.d.ts",
+		"loader-diagnostics.cjs",
+		"linux-audio-capture.linux-x64-gnu.node",
+		"linux-audio-capture.linux-arm64-gnu.node"
+	]
+}

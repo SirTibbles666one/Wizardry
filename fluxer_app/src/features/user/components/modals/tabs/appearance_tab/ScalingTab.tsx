@@ -1,0 +1,155 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import * as AccessibilityCommands from '@app/features/accessibility/commands/AccessibilityCommands';
+import Accessibility, {
+	ZOOM_LEVEL_MARKERS,
+	ZOOM_LEVEL_MAX,
+	ZOOM_LEVEL_MIN,
+} from '@app/features/accessibility/state/Accessibility';
+import {APP_ZOOM_LEVEL_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
+import {getCachedNumberFormat} from '@app/features/i18n/utils/IntlCache';
+import {Slider} from '@app/features/ui/components/Slider';
+import {canResetSliderValue, SliderResetIconButton} from '@app/features/ui/components/slider/SliderResetIconButton';
+import {formatRoundedPercentage, roundPercentage} from '@app/features/ui/utils/PercentageFormatting';
+import {StepSliderRow} from '@app/features/user/components/modals/tabs/appearance_tab/StepSliderRow';
+import {getFormattingLocale} from '@app/features/user/utils/LocaleUtils';
+import {msg, ph} from '@lingui/core/macro';
+import {Trans, useLingui} from '@lingui/react/macro';
+import {observer} from 'mobx-react-lite';
+import type React from 'react';
+import {useCallback, useEffect} from 'react';
+
+const CHAT_FONT_SIZE_DESCRIPTOR = msg({
+	message: 'Chat font size',
+	comment: 'Label for the chat font size slider.',
+});
+export const PIXELS_ACCESSIBLE_DESCRIPTOR = msg({
+	message: '{value} pixels',
+	comment: 'Screen reader value for the chat font size and group spacing sliders, shown on screen as 16px.',
+});
+const RESET_FONT_SIZE_DESCRIPTOR = msg({
+	message: 'Reset font size',
+	comment: 'Button for the chat font size setting. Restores chat font size to the default.',
+});
+const PERCENT_DESCRIPTOR = msg({
+	message: '{zoomPercent} percent',
+	comment: 'Accessible value for the app zoom level slider.',
+});
+const RESET_ZOOM_DESCRIPTOR = msg({
+	message: 'Reset zoom',
+	comment: 'Label for controls that reset app zoom to 100%, including the app zoom slider button.',
+});
+const DEFAULT_FONT_SIZE = 16;
+const DEFAULT_ZOOM_PERCENT = 100;
+const FONT_SIZE_OPTIONS = [12, 14, 15, 16, 18, 20, 24] as const;
+const FONT_SIZE_LABELLED_STOPS = [12, DEFAULT_FONT_SIZE, 24] as const;
+
+const getNearestFontSize = (value: number): number => {
+	let nearest: number = FONT_SIZE_OPTIONS[0];
+	let nearestDistance = Number.POSITIVE_INFINITY;
+	for (const option of FONT_SIZE_OPTIONS) {
+		const distance = Math.abs(option - value);
+		if (distance < nearestDistance) {
+			nearest = option;
+			nearestDistance = distance;
+		}
+	}
+	return nearest;
+};
+
+function canResetFontSize(): boolean {
+	return canResetSliderValue(Accessibility.fontSize, DEFAULT_FONT_SIZE);
+}
+
+const FontSizeResetAction: React.FC = observer(() => {
+	const {i18n} = useLingui();
+	return (
+		<SliderResetIconButton
+			canReset={true}
+			onReset={() => AccessibilityCommands.update({fontSize: DEFAULT_FONT_SIZE})}
+			ariaLabel={i18n._(RESET_FONT_SIZE_DESCRIPTOR)}
+			dataFlx="user.appearance-tab.scaling-tab.reset-button.font-size"
+			data-flx="user.appearance-tab.scaling-tab.font-size-reset-action.slider-reset-icon-button"
+		/>
+	);
+});
+
+export const FontSizeTabContent: React.FC = observer(() => {
+	const {i18n} = useLingui();
+	const fontSize = Accessibility.fontSize;
+	const selectedFontSize = getNearestFontSize(fontSize);
+	useEffect(() => {
+		if (fontSize !== selectedFontSize) AccessibilityCommands.update({fontSize: selectedFontSize});
+	}, [fontSize, selectedFontSize]);
+	const formatNumber = (value: number) => getCachedNumberFormat(getFormattingLocale()).format(value);
+	return (
+		<StepSliderRow
+			label={i18n._(CHAT_FONT_SIZE_DESCRIPTOR)}
+			action={
+				canResetFontSize() ? (
+					<FontSizeResetAction data-flx="user.appearance-tab.scaling-tab.font-size-tab-content.font-size-reset-action" />
+				) : null
+			}
+			stops={FONT_SIZE_OPTIONS}
+			value={selectedFontSize}
+			defaultValue={DEFAULT_FONT_SIZE}
+			labelledStops={FONT_SIZE_LABELLED_STOPS}
+			formatValue={(value) => `${formatNumber(value)}px`}
+			formatAccessibleValue={(value) => i18n._(PIXELS_ACCESSIBLE_DESCRIPTOR, {value: formatNumber(value)})}
+			onChange={(value) => AccessibilityCommands.update({fontSize: value})}
+			dataFlx="user.appearance-tab.scaling-tab.font-size-tab-content"
+			data-flx="user.appearance-tab.scaling-tab.font-size-tab-content.step-slider-row.update"
+		/>
+	);
+});
+
+export function canResetAppZoomLevel(): boolean {
+	const zoomPercent = roundPercentage(Accessibility.zoomLevel * 100);
+	return canResetSliderValue(zoomPercent, DEFAULT_ZOOM_PERCENT);
+}
+
+export const AppZoomLevelResetAction: React.FC = observer(() => {
+	const {i18n} = useLingui();
+	return (
+		<SliderResetIconButton
+			canReset={true}
+			onReset={() => AccessibilityCommands.update({zoomLevel: 1})}
+			ariaLabel={i18n._(RESET_ZOOM_DESCRIPTOR)}
+			dataFlx="user.appearance-tab.scaling-tab.reset-button.app-zoom-level"
+			data-flx="user.appearance-tab.scaling-tab.app-zoom-level-reset-action.slider-reset-icon-button"
+		/>
+	);
+});
+
+export const AppZoomLevelTabContent: React.FC = observer(() => {
+	const zoomLevel = Accessibility.zoomLevel;
+	const zoomPercent = roundPercentage(zoomLevel * 100);
+	const markers = ZOOM_LEVEL_MARKERS.map((step) => roundPercentage(step * 100));
+	const {i18n} = useLingui();
+	const formatPercentage = useCallback(
+		(value: number) => formatRoundedPercentage(getFormattingLocale(), value),
+		[i18n, i18n.locale],
+	);
+	return (
+		<Slider
+			defaultValue={zoomPercent}
+			factoryDefaultValue={DEFAULT_ZOOM_PERCENT}
+			minValue={Math.round(ZOOM_LEVEL_MIN * 100)}
+			maxValue={Math.round(ZOOM_LEVEL_MAX * 100)}
+			ariaLabel={i18n._(APP_ZOOM_LEVEL_DESCRIPTOR)}
+			ariaValueText={i18n._(PERCENT_DESCRIPTOR, {
+				zoomPercent: getCachedNumberFormat(getFormattingLocale()).format(zoomPercent),
+			})}
+			step={1}
+			markers={markers}
+			stickToMarkers={false}
+			asValueChanges={() => {}}
+			onValueChange={(value) => AccessibilityCommands.update({zoomLevel: value / 100})}
+			onMarkerRender={formatPercentage}
+			onValueRender={(value) => (
+				<Trans>{ph({zoomPercent: getCachedNumberFormat(getFormattingLocale()).format(roundPercentage(value))})}%</Trans>
+			)}
+			data-flx="user.appearance-tab.scaling-tab.app-zoom-level-tab-content.slider"
+		/>
+	);
+});

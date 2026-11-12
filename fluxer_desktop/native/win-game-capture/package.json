@@ -1,0 +1,23 @@
+{
+	"name": "@fluxer/win-game-capture",
+	"version": "0.0.0",
+	"description": "Native Windows GPU scheduling priority and window capture item helpers",
+	"private": true,
+	"license": "AGPL-3.0-or-later",
+	"os": [
+		"win32"
+	],
+	"cpu": [
+		"x64",
+		"arm64"
+	],
+	"main": "index.js",
+	"types": "index.d.ts",
+	"files": [
+		"index.js",
+		"index.d.ts",
+		"loader-diagnostics.cjs",
+		"win-game-capture.win32-x64-msvc.node",
+		"win-game-capture.win32-arm64-msvc.node"
+	]
+}

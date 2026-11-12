@@ -1,0 +1,451 @@
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Message } from "@bufbuild/protobuf";
+
+/**
+ * Describes the file fluxer/user/preferences/v1/accessibility.proto.
+ */
+export const file_fluxer_user_preferences_v1_accessibility: GenFile = /*@__PURE__*/
+  fileDesc("Ci5mbHV4ZXIvdXNlci9wcmVmZXJlbmNlcy92MS9hY2Nlc3NpYmlsaXR5LnByb3RvEhpmbHV4ZXIudXNlci5wcmVmZXJlbmNlcy52MSKZIwoVQWNjZXNzaWJpbGl0eVNldHRpbmdzEh4KEXNhdHVyYXRpb25fZmFjdG9yGAEgASgBSACIAQESHgoWYWx3YXlzX3VuZGVybGluZV9saW5rcxgCIAEoCBIiChVlbmFibGVfdGV4dF9zZWxlY3Rpb24YAyABKAhIAYgBARIlChhzaG93X21lc3NhZ2Vfc2VuZF9idXR0b24YBCABKAhIAogBARIlChhzaG93X3RleHRhcmVhX2ZvY3VzX3JpbmcYBSABKAhIA4gBARIbChNoaWRlX2tleWJvYXJkX2hpbnRzGAYgASgIEicKGmVzY2FwZV9leGl0c19rZXlib2FyZF9tb2RlGAcgASgISASIAQESLAofc3luY19yZWR1Y2VkX21vdGlvbl93aXRoX3N5c3RlbRgIIAEoCEgFiAEBEiQKF3JlZHVjZWRfbW90aW9uX292ZXJyaWRlGAkgASgISAaIAQESIgoVbWVzc2FnZV9ncm91cF9zcGFjaW5nGAogASgBSAeIAQESGwoObWVzc2FnZV9ndXR0ZXIYCyABKAFICIgBARIWCglmb250X3NpemUYDCABKAFICYgBARIuCiFzaG93X3VzZXJfYXZhdGFyc19pbl9jb21wYWN0X21vZGUYDSABKAhICogBARIrCiNtb2JpbGVfc3RpY2tlcl9hbmltYXRpb25fb3ZlcnJpZGRlbhgOIAEoCBImCh5tb2JpbGVfZ2lmX2F1dG9wbGF5X292ZXJyaWRkZW4YDyABKAgSJwofbW9iaWxlX2FuaW1hdGVfZW1vamlfb3ZlcnJpZGRlbhgQIAEoCBIrCh5tb2JpbGVfc3RpY2tlcl9hbmltYXRpb25fdmFsdWUYESABKAVIC4gBARImChltb2JpbGVfZ2lmX2F1dG9wbGF5X3ZhbHVlGBIgASgISAyIAQESJwoabW9iaWxlX2FuaW1hdGVfZW1vamlfdmFsdWUYEyABKAhIDYgBARIcChRhdXRvX3NlbmRfa2xpcHlfZ2lmcxgUIAEoCBIcCg9zaG93X2dpZl9idXR0b24YFSABKAhIDogBARIeChFzaG93X21lbWVzX2J1dHRvbhgWIAEoCEgPiAEBEiEKFHNob3dfc3RpY2tlcnNfYnV0dG9uGBcgASgISBCIAQESHgoRc2hvd19lbW9qaV9idXR0b24YGCABKAhIEYgBARInChpzaG93X21lZGlhX2Zhdm9yaXRlX2J1dHRvbhgZIAEoCEgSiAEBEicKGnNob3dfbWVkaWFfZG93bmxvYWRfYnV0dG9uGBogASgISBOIAQESJQoYc2hvd19tZWRpYV9kZWxldGVfYnV0dG9uGBsgASgISBSIAQESKAobc2hvd19zdXBwcmVzc19lbWJlZHNfYnV0dG9uGBwgASgISBWIAQESHwoSc2hvd19naWZfaW5kaWNhdG9yGB0gASgISBaIAQESLQogc2hvd19hdHRhY2htZW50X2V4cGlyeV9pbmRpY2F0b3IYHiABKAhIF4gBARJdCh1jaGFubmVsX3R5cGluZ19pbmRpY2F0b3JfbW9kZRggIAEoDjI2LmZsdXhlci51c2VyLnByZWZlcmVuY2VzLnYxLkNoYW5uZWxUeXBpbmdJbmRpY2F0b3JNb2RlEjMKJnNob3dfc2VsZWN0ZWRfY2hhbm5lbF90eXBpbmdfaW5kaWNhdG9yGCEgASgISBiIAQESJAoXc2hvd19tZXNzYWdlX2FjdGlvbl9iYXIYIiABKAhIGYgBARI0CidzaG93X21lc3NhZ2VfYWN0aW9uX2Jhcl9xdWlja19yZWFjdGlvbnMYIyABKAhIGogBARIxCiRzaG93X21lc3NhZ2VfYWN0aW9uX2Jhcl9zaGlmdF9leHBhbmQYJCABKAhIG4gBARI1CihzaG93X21lc3NhZ2VfYWN0aW9uX2Jhcl9vbmx5X21vcmVfYnV0dG9uGCUgASgISByIAQESMAojc2hvd19kZWZhdWx0X2Vtb2ppc19pbl9hdXRvY29tcGxldGUYJiABKAhIHYgBARIvCiJzaG93X2N1c3RvbV9lbW9qaXNfaW5fYXV0b2NvbXBsZXRlGCcgASgISB6IAQESKgodc2hvd19zdGlja2Vyc19pbl9hdXRvY29tcGxldGUYKCABKAhIH4gBARInChpzaG93X21lbWVzX2luX2F1dG9jb21wbGV0ZRgpIAEoCEggiAEBEjUKKHZvaWNlX2NoYW5uZWxfam9pbl9yZXF1aXJlc19kb3VibGVfY2xpY2sYLCABKAhIIYgBARIdChBjdXN0b21fdGhlbWVfY3NzGC0gASgJSCKIAQESGwoOc2hvd19mYXZvcml0ZXMYLiABKAhII4gBARIXCgp6b29tX2xldmVsGC8gASgBSCSIAQESUQoXZG1fbWVzc2FnZV9wcmV2aWV3X21vZGUYMCABKA4yMC5mbHV4ZXIudXNlci5wcmVmZXJlbmNlcy52MS5EbU1lc3NhZ2VQcmV2aWV3TW9kZRIfChJlbmFibGVfdHRzX2NvbW1hbmQYMSABKAhIJYgBARIVCgh0dHNfcmF0ZRgyIAEoAUgmiAEBEjAKI3Nob3dfZmFkZWRfdW5yZWFkX29uX211dGVkX2NoYW5uZWxzGDMgASgISCeIAQESKAobc2hvd19jb250ZXh0X21lbnVfc2hvcnRjdXRzGDQgASgISCiIAQESKgodY29uZmlybV9iZWZvcmVfc3RhcnRpbmdfY2FsbHMYNSABKAhIKYgBARJEChBoZHJfZGlzcGxheV9tb2RlGDYgASgOMiouZmx1eGVyLnVzZXIucHJlZmVyZW5jZXMudjEuSGRyRGlzcGxheU1vZGUSIAoTcHJlc2VydmVfZWRpdF9kcmFmdBg3IAEoCEgqiAEBEiwKH3N0YXlfaW50ZXJhY3RpdmVfd2hlbl91bmZvY3VzZWQYOCABKAhIK4gBARIyCiVjb25maXJtX2JlZm9yZV9qb2luaW5nX3ZvaWNlX2NoYW5uZWxzGDkgASgISCyIAQESMAojc2NyZWVuX3JlYWRlcl9hbm5vdW5jZV9uZXdfbWVzc2FnZXMYOiABKAhILYgBARI0CidmaXJzdF9jbGlja19wYXNzX3Rocm91Z2hfd2hlbl91bmZvY3VzZWQYOyABKAhILogBARIqCh1jb21wYWN0X21lc3NhZ2VfZ3JvdXBfc3BhY2luZxg8IAEoAUgviAEBEi0KIHNjcm9sbF90b19ib3R0b21fb25fbWVzc2FnZV9zZW5kGD0gASgISDCIAQESIwoWZGltX3N0cmlrZXRocm91Z2hfdGV4dBg+IAEoCEgxiAEBEiEKFHNlcXVlbnRpYWxfZmlsZV9zZW5kGD8gASgISDKIAQESKQocbW9iaWxlX3NwbGFzaF96b29tX2FuaW1hdGlvbhhAIAEoCEgziAEBEikKHG1lc3NhZ2VfZG91YmxlX2NsaWNrX2FjdGlvbnMYQiABKAhINIgBARIrCh5hbm5vdW5jZV9jYWxsX2pvaW5zX2FuZF9sZWF2ZXMYQyABKAhINYgBAUIUChJfc2F0dXJhdGlvbl9mYWN0b3JCGAoWX2VuYWJsZV90ZXh0X3NlbGVjdGlvbkIbChlfc2hvd19tZXNzYWdlX3NlbmRfYnV0dG9uQhsKGV9zaG93X3RleHRhcmVhX2ZvY3VzX3JpbmdCHQobX2VzY2FwZV9leGl0c19rZXlib2FyZF9tb2RlQiIKIF9zeW5jX3JlZHVjZWRfbW90aW9uX3dpdGhfc3lzdGVtQhoKGF9yZWR1Y2VkX21vdGlvbl9vdmVycmlkZUIYChZfbWVzc2FnZV9ncm91cF9zcGFjaW5nQhEKD19tZXNzYWdlX2d1dHRlckIMCgpfZm9udF9zaXplQiQKIl9zaG93X3VzZXJfYXZhdGFyc19pbl9jb21wYWN0X21vZGVCIQofX21vYmlsZV9zdGlja2VyX2FuaW1hdGlvbl92YWx1ZUIcChpfbW9iaWxlX2dpZl9hdXRvcGxheV92YWx1ZUIdChtfbW9iaWxlX2FuaW1hdGVfZW1vamlfdmFsdWVCEgoQX3Nob3dfZ2lmX2J1dHRvbkIUChJfc2hvd19tZW1lc19idXR0b25CFwoVX3Nob3dfc3RpY2tlcnNfYnV0dG9uQhQKEl9zaG93X2Vtb2ppX2J1dHRvbkIdChtfc2hvd19tZWRpYV9mYXZvcml0ZV9idXR0b25CHQobX3Nob3dfbWVkaWFfZG93bmxvYWRfYnV0dG9uQhsKGV9zaG93X21lZGlhX2RlbGV0ZV9idXR0b25CHgocX3Nob3dfc3VwcHJlc3NfZW1iZWRzX2J1dHRvbkIVChNfc2hvd19naWZfaW5kaWNhdG9yQiMKIV9zaG93X2F0dGFjaG1lbnRfZXhwaXJ5X2luZGljYXRvckIpCidfc2hvd19zZWxlY3RlZF9jaGFubmVsX3R5cGluZ19pbmRpY2F0b3JCGgoYX3Nob3dfbWVzc2FnZV9hY3Rpb25fYmFyQioKKF9zaG93X21lc3NhZ2VfYWN0aW9uX2Jhcl9xdWlja19yZWFjdGlvbnNCJwolX3Nob3dfbWVzc2FnZV9hY3Rpb25fYmFyX3NoaWZ0X2V4cGFuZEIrCilfc2hvd19tZXNzYWdlX2FjdGlvbl9iYXJfb25seV9tb3JlX2J1dHRvbkImCiRfc2hvd19kZWZhdWx0X2Vtb2ppc19pbl9hdXRvY29tcGxldGVCJQojX3Nob3dfY3VzdG9tX2Vtb2ppc19pbl9hdXRvY29tcGxldGVCIAoeX3Nob3dfc3RpY2tlcnNfaW5fYXV0b2NvbXBsZXRlQh0KG19zaG93X21lbWVzX2luX2F1dG9jb21wbGV0ZUIrCilfdm9pY2VfY2hhbm5lbF9qb2luX3JlcXVpcmVzX2RvdWJsZV9jbGlja0ITChFfY3VzdG9tX3RoZW1lX2Nzc0IRCg9fc2hvd19mYXZvcml0ZXNCDQoLX3pvb21fbGV2ZWxCFQoTX2VuYWJsZV90dHNfY29tbWFuZEILCglfdHRzX3JhdGVCJgokX3Nob3dfZmFkZWRfdW5yZWFkX29uX211dGVkX2NoYW5uZWxzQh4KHF9zaG93X2NvbnRleHRfbWVudV9zaG9ydGN1dHNCIAoeX2NvbmZpcm1fYmVmb3JlX3N0YXJ0aW5nX2NhbGxzQhYKFF9wcmVzZXJ2ZV9lZGl0X2RyYWZ0QiIKIF9zdGF5X2ludGVyYWN0aXZlX3doZW5fdW5mb2N1c2VkQigKJl9jb25maXJtX2JlZm9yZV9qb2luaW5nX3ZvaWNlX2NoYW5uZWxzQiYKJF9zY3JlZW5fcmVhZGVyX2Fubm91bmNlX25ld19tZXNzYWdlc0IqCihfZmlyc3RfY2xpY2tfcGFzc190aHJvdWdoX3doZW5fdW5mb2N1c2VkQiAKHl9jb21wYWN0X21lc3NhZ2VfZ3JvdXBfc3BhY2luZ0IjCiFfc2Nyb2xsX3RvX2JvdHRvbV9vbl9tZXNzYWdlX3NlbmRCGQoXX2RpbV9zdHJpa2V0aHJvdWdoX3RleHRCFwoVX3NlcXVlbnRpYWxfZmlsZV9zZW5kQh8KHV9tb2JpbGVfc3BsYXNoX3pvb21fYW5pbWF0aW9uQh8KHV9tZXNzYWdlX2RvdWJsZV9jbGlja19hY3Rpb25zQiEKH19hbm5vdW5jZV9jYWxsX2pvaW5zX2FuZF9sZWF2ZXNKBAgfECBKBAgqECtKBAgrECxKBAhBEEJSInVzZV9icm93c2VyX2xvY2FsZV9mb3JfdGltZV9mb3JtYXRSH2F0dGFjaG1lbnRfbWVkaWFfZGltZW5zaW9uX3NpemVSGmVtYmVkX21lZGlhX2RpbWVuc2lvbl9zaXplUhxkb3VibGVfY2xpY2tfbWVzc2FnZV9hY3Rpb25zInEKFkFjY2Vzc2liaWxpdHlPdmVycmlkZXMSGgoSZ2lmX2F1dG9wbGF5X2RpcnR5GAEgASgIEhsKE2FuaW1hdGVfZW1vamlfZGlydHkYAiABKAgSHgoWYW5pbWF0ZV9zdGlja2Vyc19kaXJ0eRgDIAEoCCrSAQoaQ2hhbm5lbFR5cGluZ0luZGljYXRvck1vZGUSLQopQ0hBTk5FTF9UWVBJTkdfSU5ESUNBVE9SX01PREVfVU5TUEVDSUZJRUQQABIpCiVDSEFOTkVMX1RZUElOR19JTkRJQ0FUT1JfTU9ERV9BVkFUQVJTEAESMAosQ0hBTk5FTF9UWVBJTkdfSU5ESUNBVE9SX01PREVfSU5ESUNBVE9SX09OTFkQAhIoCiRDSEFOTkVMX1RZUElOR19JTkRJQ0FUT1JfTU9ERV9ISURERU4QAyqrAQoURG1NZXNzYWdlUHJldmlld01vZGUSJwojRE1fTUVTU0FHRV9QUkVWSUVXX01PREVfVU5TUEVDSUZJRUQQABIfChtETV9NRVNTQUdFX1BSRVZJRVdfTU9ERV9BTEwQARInCiNETV9NRVNTQUdFX1BSRVZJRVdfTU9ERV9VTlJFQURfT05MWRACEiAKHERNX01FU1NBR0VfUFJFVklFV19NT0RFX05PTkUQAypsCg5IZHJEaXNwbGF5TW9kZRIgChxIRFJfRElTUExBWV9NT0RFX1VOU1BFQ0lGSUVEEAASGQoVSERSX0RJU1BMQVlfTU9ERV9GVUxMEAESHQoZSERSX0RJU1BMQVlfTU9ERV9TVEFOREFSRBACYgZwcm90bzM");
+
+/**
+ * @generated from message fluxer.user.preferences.v1.AccessibilitySettings
+ */
+export type AccessibilitySettings = Message<"fluxer.user.preferences.v1.AccessibilitySettings"> & {
+  /**
+   * @generated from field: optional double saturation_factor = 1;
+   */
+  saturationFactor?: number | undefined;
+
+  /**
+   * @generated from field: bool always_underline_links = 2;
+   */
+  alwaysUnderlineLinks: boolean;
+
+  /**
+   * @generated from field: optional bool enable_text_selection = 3;
+   */
+  enableTextSelection?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_message_send_button = 4;
+   */
+  showMessageSendButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_textarea_focus_ring = 5;
+   */
+  showTextareaFocusRing?: boolean | undefined;
+
+  /**
+   * @generated from field: bool hide_keyboard_hints = 6;
+   */
+  hideKeyboardHints: boolean;
+
+  /**
+   * @generated from field: optional bool escape_exits_keyboard_mode = 7;
+   */
+  escapeExitsKeyboardMode?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool sync_reduced_motion_with_system = 8;
+   */
+  syncReducedMotionWithSystem?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool reduced_motion_override = 9;
+   */
+  reducedMotionOverride?: boolean | undefined;
+
+  /**
+   * @generated from field: optional double message_group_spacing = 10;
+   */
+  messageGroupSpacing?: number | undefined;
+
+  /**
+   * @generated from field: optional double message_gutter = 11;
+   */
+  messageGutter?: number | undefined;
+
+  /**
+   * @generated from field: optional double font_size = 12;
+   */
+  fontSize?: number | undefined;
+
+  /**
+   * @generated from field: optional bool show_user_avatars_in_compact_mode = 13;
+   */
+  showUserAvatarsInCompactMode?: boolean | undefined;
+
+  /**
+   * @generated from field: bool mobile_sticker_animation_overridden = 14;
+   */
+  mobileStickerAnimationOverridden: boolean;
+
+  /**
+   * @generated from field: bool mobile_gif_autoplay_overridden = 15;
+   */
+  mobileGifAutoplayOverridden: boolean;
+
+  /**
+   * @generated from field: bool mobile_animate_emoji_overridden = 16;
+   */
+  mobileAnimateEmojiOverridden: boolean;
+
+  /**
+   * @generated from field: optional int32 mobile_sticker_animation_value = 17;
+   */
+  mobileStickerAnimationValue?: number | undefined;
+
+  /**
+   * @generated from field: optional bool mobile_gif_autoplay_value = 18;
+   */
+  mobileGifAutoplayValue?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool mobile_animate_emoji_value = 19;
+   */
+  mobileAnimateEmojiValue?: boolean | undefined;
+
+  /**
+   * @generated from field: bool auto_send_klipy_gifs = 20;
+   */
+  autoSendKlipyGifs: boolean;
+
+  /**
+   * @generated from field: optional bool show_gif_button = 21;
+   */
+  showGifButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_memes_button = 22;
+   */
+  showMemesButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_stickers_button = 23;
+   */
+  showStickersButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_emoji_button = 24;
+   */
+  showEmojiButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_media_favorite_button = 25;
+   */
+  showMediaFavoriteButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_media_download_button = 26;
+   */
+  showMediaDownloadButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_media_delete_button = 27;
+   */
+  showMediaDeleteButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_suppress_embeds_button = 28;
+   */
+  showSuppressEmbedsButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_gif_indicator = 29;
+   */
+  showGifIndicator?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_attachment_expiry_indicator = 30;
+   */
+  showAttachmentExpiryIndicator?: boolean | undefined;
+
+  /**
+   * @generated from field: fluxer.user.preferences.v1.ChannelTypingIndicatorMode channel_typing_indicator_mode = 32;
+   */
+  channelTypingIndicatorMode: ChannelTypingIndicatorMode;
+
+  /**
+   * @generated from field: optional bool show_selected_channel_typing_indicator = 33;
+   */
+  showSelectedChannelTypingIndicator?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_message_action_bar = 34;
+   */
+  showMessageActionBar?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_message_action_bar_quick_reactions = 35;
+   */
+  showMessageActionBarQuickReactions?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_message_action_bar_shift_expand = 36;
+   */
+  showMessageActionBarShiftExpand?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_message_action_bar_only_more_button = 37;
+   */
+  showMessageActionBarOnlyMoreButton?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_default_emojis_in_autocomplete = 38;
+   */
+  showDefaultEmojisInAutocomplete?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_custom_emojis_in_autocomplete = 39;
+   */
+  showCustomEmojisInAutocomplete?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_stickers_in_autocomplete = 40;
+   */
+  showStickersInAutocomplete?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_memes_in_autocomplete = 41;
+   */
+  showMemesInAutocomplete?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool voice_channel_join_requires_double_click = 44;
+   */
+  voiceChannelJoinRequiresDoubleClick?: boolean | undefined;
+
+  /**
+   * @generated from field: optional string custom_theme_css = 45;
+   */
+  customThemeCss?: string | undefined;
+
+  /**
+   * @generated from field: optional bool show_favorites = 46;
+   */
+  showFavorites?: boolean | undefined;
+
+  /**
+   * @generated from field: optional double zoom_level = 47;
+   */
+  zoomLevel?: number | undefined;
+
+  /**
+   * @generated from field: fluxer.user.preferences.v1.DmMessagePreviewMode dm_message_preview_mode = 48;
+   */
+  dmMessagePreviewMode: DmMessagePreviewMode;
+
+  /**
+   * @generated from field: optional bool enable_tts_command = 49;
+   */
+  enableTtsCommand?: boolean | undefined;
+
+  /**
+   * @generated from field: optional double tts_rate = 50;
+   */
+  ttsRate?: number | undefined;
+
+  /**
+   * @generated from field: optional bool show_faded_unread_on_muted_channels = 51;
+   */
+  showFadedUnreadOnMutedChannels?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool show_context_menu_shortcuts = 52;
+   */
+  showContextMenuShortcuts?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool confirm_before_starting_calls = 53;
+   */
+  confirmBeforeStartingCalls?: boolean | undefined;
+
+  /**
+   * @generated from field: fluxer.user.preferences.v1.HdrDisplayMode hdr_display_mode = 54;
+   */
+  hdrDisplayMode: HdrDisplayMode;
+
+  /**
+   * @generated from field: optional bool preserve_edit_draft = 55;
+   */
+  preserveEditDraft?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool stay_interactive_when_unfocused = 56;
+   */
+  stayInteractiveWhenUnfocused?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool confirm_before_joining_voice_channels = 57;
+   */
+  confirmBeforeJoiningVoiceChannels?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool screen_reader_announce_new_messages = 58;
+   */
+  screenReaderAnnounceNewMessages?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool first_click_pass_through_when_unfocused = 59;
+   */
+  firstClickPassThroughWhenUnfocused?: boolean | undefined;
+
+  /**
+   * @generated from field: optional double compact_message_group_spacing = 60;
+   */
+  compactMessageGroupSpacing?: number | undefined;
+
+  /**
+   * @generated from field: optional bool scroll_to_bottom_on_message_send = 61;
+   */
+  scrollToBottomOnMessageSend?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool dim_strikethrough_text = 62;
+   */
+  dimStrikethroughText?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool sequential_file_send = 63;
+   */
+  sequentialFileSend?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool mobile_splash_zoom_animation = 64;
+   */
+  mobileSplashZoomAnimation?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool message_double_click_actions = 66;
+   */
+  messageDoubleClickActions?: boolean | undefined;
+
+  /**
+   * @generated from field: optional bool announce_call_joins_and_leaves = 67;
+   */
+  announceCallJoinsAndLeaves?: boolean | undefined;
+};
+
+/**
+ * Describes the message fluxer.user.preferences.v1.AccessibilitySettings.
+ * Use `create(AccessibilitySettingsSchema)` to create a new message.
+ */
+export const AccessibilitySettingsSchema: GenMessage<AccessibilitySettings> = /*@__PURE__*/
+  messageDesc(file_fluxer_user_preferences_v1_accessibility, 0);
+
+/**
+ * @generated from message fluxer.user.preferences.v1.AccessibilityOverrides
+ */
+export type AccessibilityOverrides = Message<"fluxer.user.preferences.v1.AccessibilityOverrides"> & {
+  /**
+   * @generated from field: bool gif_autoplay_dirty = 1;
+   */
+  gifAutoplayDirty: boolean;
+
+  /**
+   * @generated from field: bool animate_emoji_dirty = 2;
+   */
+  animateEmojiDirty: boolean;
+
+  /**
+   * @generated from field: bool animate_stickers_dirty = 3;
+   */
+  animateStickersDirty: boolean;
+};
+
+/**
+ * Describes the message fluxer.user.preferences.v1.AccessibilityOverrides.
+ * Use `create(AccessibilityOverridesSchema)` to create a new message.
+ */
+export const AccessibilityOverridesSchema: GenMessage<AccessibilityOverrides> = /*@__PURE__*/
+  messageDesc(file_fluxer_user_preferences_v1_accessibility, 1);
+
+/**
+ * @generated from enum fluxer.user.preferences.v1.ChannelTypingIndicatorMode
+ */
+export enum ChannelTypingIndicatorMode {
+  /**
+   * @generated from enum value: CHANNEL_TYPING_INDICATOR_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CHANNEL_TYPING_INDICATOR_MODE_AVATARS = 1;
+   */
+  AVATARS = 1,
+
+  /**
+   * @generated from enum value: CHANNEL_TYPING_INDICATOR_MODE_INDICATOR_ONLY = 2;
+   */
+  INDICATOR_ONLY = 2,
+
+  /**
+   * @generated from enum value: CHANNEL_TYPING_INDICATOR_MODE_HIDDEN = 3;
+   */
+  HIDDEN = 3,
+}
+
+/**
+ * Describes the enum fluxer.user.preferences.v1.ChannelTypingIndicatorMode.
+ */
+export const ChannelTypingIndicatorModeSchema: GenEnum<ChannelTypingIndicatorMode> = /*@__PURE__*/
+  enumDesc(file_fluxer_user_preferences_v1_accessibility, 0);
+
+/**
+ * @generated from enum fluxer.user.preferences.v1.DmMessagePreviewMode
+ */
+export enum DmMessagePreviewMode {
+  /**
+   * @generated from enum value: DM_MESSAGE_PREVIEW_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: DM_MESSAGE_PREVIEW_MODE_ALL = 1;
+   */
+  ALL = 1,
+
+  /**
+   * @generated from enum value: DM_MESSAGE_PREVIEW_MODE_UNREAD_ONLY = 2;
+   */
+  UNREAD_ONLY = 2,
+
+  /**
+   * @generated from enum value: DM_MESSAGE_PREVIEW_MODE_NONE = 3;
+   */
+  NONE = 3,
+}
+
+/**
+ * Describes the enum fluxer.user.preferences.v1.DmMessagePreviewMode.
+ */
+export const DmMessagePreviewModeSchema: GenEnum<DmMessagePreviewMode> = /*@__PURE__*/
+  enumDesc(file_fluxer_user_preferences_v1_accessibility, 1);
+
+/**
+ * @generated from enum fluxer.user.preferences.v1.HdrDisplayMode
+ */
+export enum HdrDisplayMode {
+  /**
+   * @generated from enum value: HDR_DISPLAY_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: HDR_DISPLAY_MODE_FULL = 1;
+   */
+  FULL = 1,
+
+  /**
+   * @generated from enum value: HDR_DISPLAY_MODE_STANDARD = 2;
+   */
+  STANDARD = 2,
+}
+
+/**
+ * Describes the enum fluxer.user.preferences.v1.HdrDisplayMode.
+ */
+export const HdrDisplayModeSchema: GenEnum<HdrDisplayMode> = /*@__PURE__*/
+  enumDesc(file_fluxer_user_preferences_v1_accessibility, 2);
