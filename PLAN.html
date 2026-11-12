@@ -32,68 +32,32 @@ hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
 <h3>3.1 Invite-only front door</h3>
 <p><em>Phase 1 · protects the instance</em></p>
 <p>Turn registration from open to invite-only, and keep the invite card on-brand so an invited person's first impression is the seal rather than a generic join page.</p>
-<ul><li>Rules: the instance refuses self-signup; an invite is the only door; an expired</li></ul>
-<p>invite says so in words, never in an error code. Existing accounts keep working.</p>
-<ul><li>Pass: <code>POST /api/v1/auth/register</code> returns the closed registration error; one invite</li></ul>
-<p>link still creates an account end to end; the invite page renders the seal at 390 px wide with no broken image.</p>
-<ul><li>Decision needed: open to <code>@slothlee.xyz</code> only, or strictly invites? (see §7)</li></ul>
+<ul><li>Rules: the instance refuses self-signup; an invite is the only door; an expired invite says so in words, never in an error code. Existing accounts keep working.</li><li>Pass: <code>POST /api/v1/auth/register</code> returns the closed registration error; one invite link still creates an account end to end; the invite page renders the seal at 390 px wide with no broken image.</li><li>Decision needed: open to <code>@slothlee.xyz</code> only, or strictly invites? (see §7)</li></ul>
 <h3>3.2 A backup that runs without me</h3>
 <p><em>Phase 1 · protects the instance</em></p>
 <p>Nightly snapshot, weekly verification, and one restore drilled for real.</p>
-<ul><li>Rules: a failed backup is louder than a successful one; the drill restores into a</li></ul>
-<p>scratch folder, never over the live store; retention keeps three (current setting).</p>
-<ul><li>Pass: seven consecutive nightly archives with zero failures, each passing</li></ul>
-<p><code>rexctl backup verify</code>; one documented restore of today's archive with the wall-clock time it took; the oldest archive ages out on schedule rather than on a hunch.</p>
+<ul><li>Rules: a failed backup is louder than a successful one; the drill restores into a scratch folder, never over the live store; retention keeps three (current setting).</li><li>Pass: seven consecutive nightly archives with zero failures, each passing <code>rexctl backup verify</code>; one documented restore of today's archive with the wall-clock time it took; the oldest archive ages out on schedule rather than on a hunch.</li></ul>
 <h3>3.3 Restart gate</h3>
 <p><em>Phase 2 · proves the instance</em></p>
 <p>One command that answers "is Wizardry still Wizardry" after any restart, deploy or <code>rexctl upgrade</code>.</p>
-<ul><li>Checks: <code>rexctl doctor</code>; <code>/</code>, <code>/.well-known/fluxer</code>, <code>/app</code>, <code>/admin</code> status codes;</li></ul>
-<p>branding present in the served HTML (name, theme colour, both favicons, custom CSS block); the sign-in page rendered in headless Chromium with the mark loaded and the primary button's label colour not equal to its fill; the discovery document agreeing with the branding row.</p>
-<ul><li>Rules: it fails on a missing asset, not only on a non-200; it never writes anything;</li></ul>
-<p>a check it cannot compute reports as a warning with the reason, never as a pass.</p>
-<ul><li>Pass: one command, exit 0 only when all eight checks pass; proven by breaking one</li></ul>
-<p>thing on purpose (wrong favicon URL) and watching it fail.</p>
+<ul><li>Checks: <code>rexctl doctor</code>; <code>/</code>, <code>/.well-known/fluxer</code>, <code>/app</code>, <code>/admin</code> status codes; branding present in the served HTML (name, theme colour, both favicons, custom CSS block); the sign-in page rendered in headless Chromium with the mark loaded and the primary button's label colour not equal to its fill; the discovery document agreeing with the branding row.</li><li>Rules: it fails on a missing asset, not only on a non-200; it never writes anything; a check it cannot compute reports as a warning with the reason, never as a pass.</li><li>Pass: one command, exit 0 only when all eight checks pass; proven by breaking one thing on purpose (wrong favicon URL) and watching it fail.</li></ul>
 <h3>3.4 Operator CLI</h3>
 <p><em>Phase 2 · proves the instance</em></p>
 <p>The three operations I hand-wrote today — apply branding, transfer guild ownership, append an audit entry — as checked commands with <code>--dry-run</code>.</p>
-<ul><li>Rules: every command prints the diff it would make before making it; the audit entry</li></ul>
-<p>is written by the tool, not remembered by the operator; no command invents a value it was not given; re-running is idempotent.</p>
-<ul><li>Pass: three commands (<code>brand</code>, <code>own</code>, <code>audit</code>), each with a dry run, each re-runnable</li></ul>
-<p>with zero diff on the second pass; the KV rows they write match what the client reads.</p>
+<ul><li>Rules: every command prints the diff it would make before making it; the audit entry is written by the tool, not remembered by the operator; no command invents a value it was not given; re-running is idempotent.</li><li>Pass: three commands (<code>brand</code>, <code>own</code>, <code>audit</code>), each with a dry run, each re-runnable with zero diff on the second pass; the KV rows they write match what the client reads.</li></ul>
 <h3>3.5 A welcome that isn't blank</h3>
 <p><em>Phase 3 · presents the instance</em></p>
 <p>A first-run notice and one pinned message, in the voice the brand already uses.</p>
-<ul><li>Rules: no feature tour, no carousel, no "getting started" checklist — one notice, one</li></ul>
-<p>pinned message, three lines each; it says what the instance is for and how to get an invite.</p>
-<ul><li>Pass: a test account's first screen shows the notice; the pinned message is the first</li></ul>
-<p>thing in <code>#general</code>; both read correctly at 390 px and in the desktop client.</p>
+<ul><li>Rules: no feature tour, no carousel, no "getting started" checklist — one notice, one pinned message, three lines each; it says what the instance is for and how to get an invite.</li><li>Pass: a test account's first screen shows the notice; the pinned message is the first thing in <code>#general</code>; both read correctly at 390 px and in the desktop client.</li></ul>
 <h3>3.6 Identity surfaces finished</h3>
 <p><em>Phase 3 · presents the instance</em></p>
 <p>Guild icon, banner and invite splash from the same seal, so the name appears nowhere as a placeholder.</p>
-<ul><li>Rules: same palette as <code>brand/BRAND.md</code>, no second mark, no mascot; art is generated</li></ul>
-<p>from the HTML sources in <code>brand/</code>, not drawn anew.</p>
-<ul><li>Pass: guild icon 512×512, banner 960×540, splash 1920×1080, all rendering in the</li></ul>
-<p>client; the invite card and the guild header both show the seal; zero default-art placeholders left.</p>
+<ul><li>Rules: same palette as <code>brand/BRAND.md</code>, no second mark, no mascot; art is generated from the HTML sources in <code>brand/</code>, not drawn anew.</li><li>Pass: guild icon 512×512, banner 960×540, splash 1920×1080, all rendering in the client; the invite card and the guild header both show the seal; zero default-art placeholders left.</li></ul>
 <h2>4. Order, and what would change it</h2>
-<ol><li><strong>Backup that runs without me</strong> (3.2) — the only item whose absence can destroy the</li></ol>
-<p>other five.</p>
-<ol><li><strong>Invite-only front door</strong> (3.1) — cheap, and it closes a door that is currently open</li></ol>
-<p>to the internet.</p>
-<ol><li><strong>Restart gate</strong> (3.3) — every later change depends on being able to prove it.</li><li><strong>Operator CLI</strong> (3.4) — pays for itself the second time branding changes.</li><li><strong>Identity surfaces</strong> (3.6) — visible, but nothing is broken without it.</li><li><strong>Welcome</strong> (3.5) — last, because its content depends on who is being welcomed.</li></ol>
+<ol><li><strong>Backup that runs without me</strong> (3.2) — the only item whose absence can destroy the other five.</li><li><strong>Invite-only front door</strong> (3.1) — cheap, and it closes a door that is currently open to the internet.</li><li><strong>Restart gate</strong> (3.3) — every later change depends on being able to prove it.</li><li><strong>Operator CLI</strong> (3.4) — pays for itself the second time branding changes.</li><li><strong>Identity surfaces</strong> (3.6) — visible, but nothing is broken without it.</li><li><strong>Welcome</strong> (3.5) — last, because its content depends on who is being welcomed.</li></ol>
 <p>If only one thing is built: <strong>3.2</strong>, and specifically the restore drill. A backup that has never been restored is a rumour.</p>
 <h2>5. Considered and rejected</h2>
-<ul><li><strong>Forking the API to add messaging features.</strong> The fork exists to carry identity and</li></ul>
-<p>the desktop build. Every feature above is operator-level; none touches the Rust tree.</p>
-<ul><li><strong>Turning on premium/billing.</strong> <code>instance_billing_config</code> is absent and premium is off.</li></ul>
-<p>Selling to two accounts is a support burden with no upside.</p>
-<ul><li><strong>Message search tuning.</strong> Eight messages. Meilisearch is running and unbothered.</li><li><strong>Voice quality work.</strong> LiveKit reports healthy and <code>rexctl doctor</code> agrees; there is</li></ul>
-<p>nobody on the other end of a call yet.</p>
-<ul><li><strong>Custom badges, themes marketplace, multiple palettes.</strong> <code>BRAND.md</code> says one accent,</li></ul>
-<p>and badges need someone who wants one. Both are answers to a question nobody asked.</p>
-<ul><li><strong>An AI agent in the guild that writes records.</strong> It would put a model's words where a</li></ul>
-<p>person's belong; the plan keeps authorship human.</p>
-<ul><li><strong>Fixing the mail server's "everything is encrypted" symptom in this document.</strong> It is</li></ul>
-<p>a different product, and it still needs one screenshot to diagnose.</p>
+<ul><li><strong>Forking the API to add messaging features.</strong> The fork exists to carry identity and the desktop build. Every feature above is operator-level; none touches the Rust tree.</li><li><strong>Turning on premium/billing.</strong> <code>instance_billing_config</code> is absent and premium is off. Selling to two accounts is a support burden with no upside.</li><li><strong>Message search tuning.</strong> Eight messages. Meilisearch is running and unbothered.</li><li><strong>Voice quality work.</strong> LiveKit reports healthy and <code>rexctl doctor</code> agrees; there is nobody on the other end of a call yet.</li><li><strong>Custom badges, themes marketplace, multiple palettes.</strong> <code>BRAND.md</code> says one accent, and badges need someone who wants one. Both are answers to a question nobody asked.</li><li><strong>An AI agent in the guild that writes records.</strong> It would put a model's words where a person's belong; the plan keeps authorship human.</li><li><strong>Fixing the mail server's "everything is encrypted" symptom in this document.</strong> It is a different product, and it still needs one screenshot to diagnose.</li></ul>
 <h2>6. Correction</h2>
 <p>Earlier in this arc I read "the reset link says 404" as a Wizardry routing problem and spent effort on the app's <code>/reset</code> route. The link was the <strong>mail server's</strong> recovery email, which built its URL from the mail domain — so it pointed at the brochure site, which has no reset page. Fixed in that server's <code>send_recovery</code>, rebuilt and deployed; the app's <code>/reset</code> was never broken. Recording it here so the next session does not re-derive the wrong fix.</p>
 <h2>7. Open questions for the owner</h2>
@@ -101,5 +65,4 @@ hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
 <h2>8. What would falsify this plan</h2>
 <p>If ninety days pass with <strong>two accounts and no new member</strong>, phases 2 and 3 are decoration: the instance is a private tool, and the honest plan collapses to §3.2 plus §3.1, with everything else struck. The plan should then be re-issued shorter rather than defended.</p>
 <h2>Change log</h2>
-<ul><li>12 Nov 2026 — first issue. Measured against the live instance; branding already</li></ul>
-<p>shipped, so it is not a feature here, it is a fact.</p></body></html>
+<ul><li>12 Nov 2026 — first issue. Measured against the live instance; branding already shipped, so it is not a feature here, it is a fact.</li></ul></body></html>

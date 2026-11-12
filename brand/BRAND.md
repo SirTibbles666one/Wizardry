@@ -1,73 +1,110 @@
-# Wizardry — brand system
+# Wizardry — brand system (v2)
 
-A dark, arcane identity for the self-hosted instance at `wizardry.slothlee.xyz`.
-One mark, one accent, no decoration that does not survive at 32 px.
+The mark changed on 12 November 2026. This document replaces the original one-mark,
+obsidian-and-gold system: the identity now belongs to the same family as Sloth Lee, and
+the mark is the mascot rather than the compass seal.
 
 ## The idea
 
-Wizardry is a messenger that runs on your own machine. The brand says so quietly:
-an obsidian ground, a single ember-gold seal, and lettering that is set, not
-shouted. Nothing glows, sparkles or drips — the strength is the restraint, so the
-interface chrome (which the app draws) stays the loudest thing on screen.
+**A sloth in a wizard's hat, in a forest at night.** Sloth Lee is the daytime of that
+family — cream paper, leaf green, honey light, a sloth who is in no hurry. Wizardry is
+the same forest after dark: pine, moss, fireflies, the same honey accent, the same
+animal, now wearing a hat.
 
-## The mark — "the Seal"
-
-A tall diamond drawn from four straight strokes, a thin reticle through its
-centre, and a solid gold orb at the crossing. It is a compass rose read as a
-seal: a fixed point you navigate by, which is the whole promise of a self-hosted
-instance. At 32 px it reduces to diamond + orb and still reads.
-
-- Diamond: single closed path, 18 px stroke, `stroke-linejoin: round`
-- Reticle: vertical 0.42 and horizontal 0.30 opacity — texture, never structure
-- Orb: r 38 of 512, solid accent, ringed at r 62 for large sizes only
+That is the whole concept. Everything below is the consequences of it.
 
 ## Palette
 
-| Token | Hex | Use |
-| --- | --- | --- |
-| Obsidian | `#0B0A12` | grounds, `theme_color`, backdrop base |
-| Deep violet | `#1B1330` | icon body, panels |
-| Arcane indigo | `#2C1D50` | the lit corner of a gradient |
-| Ember gold | `#E9B65A` | the seal, the wordmark's first half |
-| Dim gold | `#B98A3C` | hover/pressed states, hairlines |
-| Mist | `#C9C2DB` | the wordmark's second half, secondary labels |
+The values are Sloth Lee's `canopy` theme, token for token, so the two products read as
+one family rather than two brands that happen to be green.
 
-Gold on obsidian is the entire colour story. Violet only ever appears as depth,
-never as a second accent — two accents is how a dark brand starts to look cheap.
+| Role | Value | Where it is used |
+| --- | --- | --- |
+| Ground | `#18271c` | page background |
+| Ground, raised | `#1d3123` | cards, panels |
+| Ground, higher | `#213a2b` | inputs, icon badge |
+| Ink | `#e4efe2` | body text |
+| Ink, muted | `#a3bda0` | secondary text, the domain line |
+| Accent (honey) | `#e0b45c` | the only accent: buttons, links, stars, moon |
+| Label on honey | `#16241a` | text on a honey button — never white |
+| Fur | `#8a6f4f` | the mascot's head |
+| Face | `#e9dcc3` | the mascot's face |
+| Mask | `#6d5842` | the sloth's eye patches |
+| Blush | `#dda089` | cheeks, at 75% |
+| Line | `#142b1c` | eyes, smile, hat brim shadow |
+
+One accent, no gradients in the marks, and no second colour that competes with honey.
+Violet and obsidian from v1 are retired.
 
 ## Type
 
-DejaVu Sans Bold for the wordmark, `letter-spacing: 0.16em`, all caps. Wide
-tracking is what makes a plain geometric sans read as set rather than typed. The
-wordmark splits `WIZA` in gold and `RDRY` in mist — the break lands on a letter
-boundary after four characters, so it reads as a deliberate rule, not a gradient.
+- **Baloo 2** (700/800) — the wordmark and headings. Rounded, friendly, slightly
+  top-heavy: the same letterforms Sloth Lee uses for display.
+- **Nunito** (400/600/700) — interface text.
+- Both are declared as `@font-face` inside the instance's custom CSS, pointing at
+  `fonts.gstatic.com`, which the app-proxy's `font-src` already allows. No font is
+  bundled, so there is nothing to serve or expire.
 
-## Assets
+## The mark
 
-| File | Size | Where it goes |
+The mascot, drawn in flat vector geometry from the same four shapes Sloth Lee's mark is
+built from — fur disc, cream face, two dot eyes, blush — plus the two things that make
+him a wizard:
+
+- a **pointed hat** (leaf green cone, honey brim, one four-pointed star) that sits *on*
+  the skull, brim overlapping the crown so it is worn rather than balanced;
+- a **staff** with a honey crescent, held by a visible paw.
+
+Sloth cues that must survive: dark eye masks, a low blunt nose, the cream face patch.
+Remove any one of them and the character becomes a generic bear.
+
+## Assets and how they are made
+
+Everything in `brand/` is rendered from `brand/src/*.html` by `python3 brand/make.py`
+(headless Chromium, then alpha solved from a white render and a black render, because
+Chromium here returns an opaque canvas whatever it is asked for). No asset is drawn
+twice and none is hand-exported.
+
+| Asset | Size | Used for |
 | --- | --- | --- |
-| `icon.png` | 512×512 | app icon, `branding.icon_url` |
-| `symbol.png` | 256×256 | compact mark, `branding.symbol_url` |
-| `logo.png` | 1400×400 | horizontal lockup, `branding.logo_url` |
-| `wordmark.png` | 1280×320 | type only, `branding.wordmark_url` |
-| `favicon.png` | 32×32 | dark glyph for light browser chrome, `branding.favicon_url` |
-| `favicon-dark.png` | 32×32 | gold glyph for dark chrome, `branding.favicon_dark_url` |
-| `backdrop.png` | 1920×1080 | sign-in card background, `branding.sign_in_backdrop_url` |
+| `icon.png` | 512² | guild icon, panel badge, app icon |
+| `symbol.png` | 512² | the full bust with staff |
+| `hero.png` | 560×680 | the standalone portrait, not currently served |
+| `wordmark.png` | 1280×320 | the "Wizardry" lockup in the auth panel |
+| `favicon.png` / `favicon-dark.png` | 64² | browser tabs (mini mascot, no staff) |
+| `backdrop.png` | 1920×1080 | sign-in atmosphere: moon, mist, fireflies |
 
-Sources are the `.html` files beside each PNG: each one is a page the size of the
-asset, rendered by headless Chromium (`rasterize.mjs` in the build scratch dir).
-There is no design file to keep in sync — the HTML *is* the artwork.
+### Two sizes of the same character
 
-## Rules
+The detailed bust is for 128 px and up. Below that, `MINI` — a separate, zoomed,
+simplified composition — takes over: masks and eyes grow, the nose stays, and the smile
+and blush are dropped because at 32 px they are noise. Same character, two drawings,
+chosen by final size. This is the one place duplication is correct.
 
-- Clear space around the seal: one quarter of its width on every side.
-- Never place the seal on gold, or the wordmark on violet lighter than `#2C1D50`.
-- Minimum sizes: seal 24 px, wordmark 96 px wide, lockup 140 px wide.
-- Do not add a second mark, a mascot, or an illustration. One seal, everywhere.
+### Rule learned the hard way
+**The backdrop carries no character.** The client crops `sign_in_backdrop_url` harder
+than `cover` predicts; a mascot placed inside the 1920×1080 safe area was still cut off
+at both edges across two attempts. The backdrop is therefore atmosphere only — moon,
+mist, fireflies — and the mascot appears in the icon and the wordmark, where it is
+composited by the app rather than cropped by it.
+
+## Clear space and minimum sizes
+
+- Mark: clear space of one eye-patch width on every side.
+- Minimum sizes: badge 32 px, bust 64 px, wordmark 96 px wide.
+- On honey, the mark is never placed; honey is for text and controls.
+
+## What stays deliberately unchanged
+
+- Fluxer's UI artwork, icons and illustrations — CC BY-SA 4.0, and not ours to redraw.
+- Internal identifiers (`fluxer_*` tables, container names, env prefixes).
+- Upstream feature behaviour. The brand is a skin; it does not change what the software
+  does.
 
 ## Changing it
 
-Edit the `.html` source, re-render, replace the PNG here, and update the URLs the
-instance points at. The instance reads branding from `app_public_config` in its
-KV store; the app-proxy allowlists each branding URL's origin in its CSP
-automatically, so a new host needs no proxy change.
+Edit the `.html` source in `brand/src/`, run `python3 brand/make.py`, commit the PNGs,
+then point the instance's branding URLs at them with a bumped `?v=`. The instance reads
+branding from `app_public_config` in its KV store — and the value there must be stored
+as a **JSON string**, not an object: an object makes the API log "Stored app public
+configuration is not valid JSON" and fall back to the first-run setup screen.

@@ -41,6 +41,7 @@ def render(md: str) -> str:
     para: list[str] = []
     items: list[str] = []
     ordered = False
+    list_start = 1
     table: list[list[str]] = []
 
     def flush_para():
@@ -51,8 +52,13 @@ def render(md: str) -> str:
     def flush_list():
         nonlocal ordered
         if items:
-            tag = "ol" if ordered else "ul"
-            out.append(f"<{tag}>" + "".join(f"<li>{inline(i)}</li>" for i in items) + f"</{tag}>")
+            # A numbered list interrupted by a blank line is still one list: carry the
+            # starting number so the second half does not restart at 1.
+            if ordered:
+                start = f' start="{list_start}"' if list_start != 1 else ""
+                out.append(f"<ol{start}>" + "".join(f"<li>{inline(i)}</li>" for i in items) + "</ol>")
+            else:
+                out.append("<ul>" + "".join(f"<li>{inline(i)}</li>" for i in items) + "</ul>")
             items.clear()
             ordered = False
 
@@ -103,6 +109,8 @@ def render(md: str) -> str:
             is_ordered = bool(number)
             if items and is_ordered != ordered:
                 flush_list()
+            if is_ordered and not items:
+                list_start = int(number.group(0).split(".", 1)[0])
             ordered = is_ordered
             items.append((number or bullet).group(1))
             continue
@@ -114,6 +122,11 @@ def render(md: str) -> str:
             continue
 
         if items:
+            # A wrapped list item: indented continuation belongs to the item, not to a
+            # new paragraph — otherwise emphasis that straddles the wrap prints literally.
+            if raw.startswith((" ", "\t")):
+                items[-1] += " " + stripped
+                continue
             flush_list()
         para.append(stripped)
 
