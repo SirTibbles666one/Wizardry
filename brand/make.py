@@ -24,6 +24,7 @@ ASSETS = [
     ("symbol", 512, 512),
     ("hero", 560, 680),
     ("wordmark", 1280, 320),
+    ("backdrop", 1920, 1080),
     ("favicon", 64, 64),
     ("favicon-dark", 64, 64),
 ]
