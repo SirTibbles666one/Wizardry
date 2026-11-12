@@ -87,9 +87,40 @@ baked default. So the icon is a sloth and the splash behind it is Discord grey.
 - Pass: a new account sees the notice, the pinned message is first in `#general`, and an
   empty channel says something true instead of nothing.
 
+### 3.6 A blank screen that says nothing
+*Added the day after this plan was written, because it happened.*
+
+Reported from a phone: `wizardry.slothlee.xyz/chai` rendered a full-screen pine
+background with nothing on it. What the measurements say:
+
+| Check | Result |
+| --- | --- |
+| `/chai` from the server | `200 text/html`, the app shell, 62,845 bytes |
+| `/chai` in a clean 390×844 mobile-emulated browser | renders "404: page not found", title `Wizardry | Not found`, **console clean** |
+| HTML caching | `cache-control: public, max-age=0, s-maxage=1` — not stale-able |
+| `sw.js` caching | `cache-control: no-cache` |
+| Hashed assets | `max-age=31536000, immutable` — correct |
+| Service worker strategy | **NetworkFirst** for navigations, with a cached shell as fallback |
+
+So the route is fine, the page is fine, the caching is correct — and the screen was still
+blank. The shell had loaded (the pine background is inline in the document, which is why
+the colour was right) and the client never mounted. The likely mechanism: a flaky
+connection — the screenshot shows a VPN — makes the navigation fall back to a **cached
+shell from an earlier build**, whose asset hashes no longer resolve; the modules fail, the
+root stays empty, and there is no watchdog to say so.
+
+- Rules: a boot failure must say so in the brand's voice within eight seconds, with one
+  action; the worker's offline fallback is a small self-contained page, never a cached app
+  shell; a cache version bump deletes the previous generation rather than accumulating it.
+- Pass: with the network throttled to offline in devtools, the page shows the branded
+  message and a Retry control within eight seconds; a shell from an older build can no
+  longer be served (cache name carries the version and old caches are purged on activate);
+  no route renders an empty root at 390×844.
+
 ## 4. Order
 
-1. **3.1 manifest** — a bug, not a nicety, and small.
+1. **3.1 manifest** and **3.6 watchdog** — one build carries both, and both are bugs
+   rather than niceties.
 2. **3.2 link card** — an invitation is a pasted link; this is the first impression.
 3. **3.4 mail** — arrives uninvited, so it carries the brand whether we like it or not.
 4. **3.3 guild art** — needs the owner's decision on the guild name first.
@@ -165,6 +196,7 @@ below, which is why they are recorded here rather than applied.
 | 3.3 | Guild art (name done: **Nightgrove**) | 3 | art needs one upload by the owner |
 | 3.4 | Branded transactional mail | 3 | planned |
 | 3.5 | First-run copy | 3 | planned |
+| 3.6 | Blank screen that says nothing (boot watchdog + real offline page) | 3 | **new — evidence gathered** |
 | — | AAAA record for IPv6 clients | — | blocked: no Cloudflare token |
 
 Two items in that table are not plans but defects: **2.2** (search indexes nothing) and
