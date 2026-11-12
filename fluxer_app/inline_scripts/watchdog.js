@@ -1,26 +1,34 @@
-// Boot watchdog: if the app never replaces the boot splash, say so.
+// Boot watchdog: if the client never fills #root, say so.
 //
-// The splash is rendered by boot-shell.js into #root as #fluxer-boot-shell and is
-// removed when the real app mounts. So "still there after this long" is the exact
-// signal for "the client never started" — which otherwise shows as a blank page in
-// the theme's background colour, with nothing to explain it or act on.
+// The failure this exists for is silent: the document, its inline theme and the
+// service worker all arrive, the app bundle does not run, and the page is a blank
+// rectangle in the theme's own background colour. Nothing tells the person what
+// happened or what to do.
 //
-// The overlay is added on top and removed again if the app wakes up late, so a slow
-// phone is never punished for being slow.
+// The signal is #root staying empty — checked every second from load, acted on after
+// twelve, and withdrawn the moment the app mounts, so a slow phone is never punished
+// for being slow.
 (() => {
-	var DELAY_MS = 12000;
+	var GRACE_MS = 12000;
 	var OVERLAY_ID = 'wizardry-boot-fallback';
+	var startedAt = Date.now();
+	var shown = false;
 
-	var splashAlive = () => document.getElementById('fluxer-boot-shell') !== null;
+	var root = () => document.getElementById('root');
 
-	var removeOverlay = () => {
-		var existing = document.getElementById(OVERLAY_ID);
-		if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+	var mounted = function () {
+		var el = root();
+		return !!(el && el.childElementCount > 0);
 	};
 
-	var showOverlay = () => {
-		if (!splashAlive() || document.getElementById(OVERLAY_ID)) return;
-		if (!document.body) return;
+	var removeOverlay = function () {
+		var existing = document.getElementById(OVERLAY_ID);
+		if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+		shown = false;
+	};
+
+	var showOverlay = function () {
+		if (document.getElementById(OVERLAY_ID) || !document.body) return;
 		var overlay = document.createElement('div');
 		overlay.id = OVERLAY_ID;
 		overlay.setAttribute('role', 'alert');
@@ -31,7 +39,7 @@
 		overlay.innerHTML =
 			'<div style="max-width:26rem">' +
 			'<h1 style="margin:0 0 10px;font-size:22px;line-height:1.25;' +
-			'font-family:\'Baloo 2\',Nunito,system-ui,sans-serif">Wizardry is taking longer to load</h1>' +
+			"font-family:'Baloo 2',Nunito,system-ui,sans-serif\">Wizardry is taking longer to load</h1>" +
 			'<p style="margin:0 0 20px;color:#a3bda0;font-size:15px;line-height:1.5">' +
 			'The app did not finish starting. Your connection may have dropped, or an update was being installed.' +
 			'</p>' +
@@ -42,20 +50,23 @@
 		document.body.appendChild(overlay);
 		var retry = document.getElementById('wizardry-boot-retry');
 		if (retry) {
-			retry.addEventListener('click', () => {
+			retry.addEventListener('click', function () {
 				location.reload();
 			});
 		}
 	};
 
-	setTimeout(showOverlay, DELAY_MS);
-
-	var observer = new MutationObserver(() => {
-		if (!splashAlive()) {
-			removeOverlay();
-			observer.disconnect();
+	var tick = function () {
+		if (mounted()) {
+			if (shown) removeOverlay();
+			return;
 		}
-	});
-	observer.observe(document.documentElement, {childList: true, subtree: true});
-	window.addEventListener('online', removeOverlay);
+		if (!shown && Date.now() - startedAt >= GRACE_MS) {
+			showOverlay();
+			shown = true;
+		}
+	};
+
+	setInterval(tick, 1000);
+	tick();
 })();
