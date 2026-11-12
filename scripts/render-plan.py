@@ -13,9 +13,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "PLAN.md"
-HTML_OUT = ROOT / "PLAN.html"
-PDF_OUT = ROOT / "PLAN.pdf"
+# One renderer serves every plan: pass the source, the output and the title, so a
+# second document never inherits the first one's footer.
+_args = sys.argv[1:]
+SOURCE = Path(_args[0]) if _args else ROOT / "PLAN.md"
+PDF_OUT = Path(_args[1]) if len(_args) > 1 else ROOT / "PLAN.pdf"
+DOC_TITLE = _args[2] if len(_args) > 2 else "Wizardry — operator plan"
+FOOTER_LABEL = _args[3] if len(_args) > 3 else "Wizardry — operator plan · 12 November 2026"
+HTML_OUT = PDF_OUT.with_suffix(".html")
 
 INLINE_CODE = re.compile(r"`([^`]+)`")
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
@@ -147,12 +152,12 @@ def main() -> int:
     body = render(md)
     HTML_OUT.write_text(
         "<!doctype html><html><head><meta charset='utf-8'>"
-        f"<title>Wizardry — operator plan</title><style>{CSS}</style></head>"
+        f"<title>{DOC_TITLE}</title><style>{CSS}</style></head>"
         f"<body>{body}</body></html>"
     )
     node = Path(__file__).with_name("pdf.mjs")
     result = subprocess.run(
-        ["node", str(node), str(HTML_OUT), str(PDF_OUT)],
+        ["node", str(node), str(HTML_OUT), str(PDF_OUT), FOOTER_LABEL],
         capture_output=True, text=True,
         env={**__import__("os").environ},
     )

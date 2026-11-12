@@ -12,9 +12,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const [SRC, OUT] = process.argv.slice(2);
+const [SRC, OUT, FOOTER] = process.argv.slice(2);
 if (!SRC || !OUT) {
-  console.error('usage: pdf.mjs <page.html> <out.pdf>');
+  console.error('usage: pdf.mjs <page.html> <out.pdf> [footer label]');
   process.exit(2);
 }
 
@@ -67,7 +67,7 @@ const printed = await cmd('Page.printToPDF', {
   footerTemplate:
     '<div style="width:100%;font-family:DejaVu Sans,sans-serif;font-size:7.5pt;color:#8a8496;' +
     'padding:0 16mm;display:flex;justify-content:space-between;">' +
-    '<span>Wizardry — operator plan · 12 November 2026</span>' +
+    `<span>${(FOOTER || 'Wizardry').replace(/[<>&]/g, '')}</span>` +
     '<span class="pageNumber"></span><span style="display:none"></span></div>',
   margin: { top: '16mm', bottom: '14mm', left: '16mm', right: '16mm' },
 });

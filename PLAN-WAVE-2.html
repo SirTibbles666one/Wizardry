@@ -1,0 +1,98 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — second wave</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>Wizardry — second wave: prove what is already built</h1>
+<p><em>Written 12 November 2026, the same day as the first plan. Measured on the live instance; every number names the command that produced it.</em></p>
+<p>The first wave protects the instance: backups, an invite door, a gate, an operator CLI, some art. This wave is a different kind of work. <strong>Fluxer already ships almost everything a member asks for.</strong> Search, web push, data export, voice, invites, an Electron desktop shell — all of it is in the tree. What is missing is not code. What is missing is <strong>proof</strong>, and in one case a single fact that turns out to be broken.</p>
+<p>So the second wave is not a feature list. It is a list of measurements, each with the small piece of glue that makes the measurement possible.</p>
+<h2>1. Facts</h2>
+<table><thead><tr><th>Fact</th><th>Value</th><th>How known</th></tr></thead><tbody><tr><td>Messages</td><td>9 — it was 8 when the first plan was written</td><td><code>count(*)</code> on <code>messages</code></td></tr><tr><td>Message search index</td><td><strong>0 documents</strong>; index created 14:01 today and never updated since</td><td><code>GET /indexes/messages</code></td></tr><tr><td>User search index</td><td>2 documents</td><td><code>GET /indexes/users/stats</code></td></tr><tr><td>Search indexes present</td><td><code>audit_logs</code>, <code>guild_members</code>, <code>guilds</code>, <code>users</code>, <code>messages</code></td><td><code>GET /indexes</code></td></tr><tr><td>Push</td><td>relay consent accepted 14:20 by <code>tibs</code>; <strong>0 devices subscribed</strong></td><td>push config; no subscription rows</td></tr><tr><td>Web push in the tree</td><td>11 server files</td><td>`grep -ril push_subscription\</td><td>webpush fluxer_api/src`</td></tr><tr><td>Voice</td><td>1 region, 1 server, <strong>0 calls ever placed</strong></td><td><code>voice_regions</code>, <code>voice_servers</code></td></tr><tr><td>Administrators</td><td><strong>1</strong> account with <code>acls: ["*"]</code>; the other holds none</td><td><code>users</code> rows</td></tr><tr><td>Attachments</td><td>5</td><td><code>attachment*</code> tables</td></tr><tr><td>Data export in the tree</td><td>9 files reference it; <strong>no export has ever been produced</strong></td><td><code>grep -ril exportData</code>; no artifact on disk</td></tr><tr><td>Desktop releases</td><td><strong>0</strong></td><td><code>api.github.com/repos/.../releases</code></td></tr><tr><td>Read states</td><td>5 — channels have been opened</td><td><code>read_states</code></td></tr><tr><td>Admin actions logged</td><td>186</td><td><code>admin_audit_logs</code></td></tr></tbody></table>
+<p>Two of those deserve their own sentence. The <strong>message index holds zero documents</strong> while the user index holds two: search is switched on, wired to Meilisearch, and indexing nothing you would ever want to find. And there is <strong>one administrator</strong>, so if that one account loses its password the admin panel has no second key.</p>
+<h2>2. Questions, and why the answer is not "it works"</h2>
+<table><thead><tr><th>#</th><th>Question</th><th>What exists</th><th>Why it is unproven</th><th>Kind</th></tr></thead><tbody><tr><td>1</td><td>"What if I lose my admin account?"</td><td>one account with <code>acls: ["*"]</code></td><td>nothing else can administer the instance</td><td>finding</td></tr><tr><td>2</td><td>"Can I find that message?"</td><td>Meilisearch, five indexes, a search UI</td><td>message index has 0 documents</td><td>finding</td></tr><tr><td>3</td><td>"Will I know when someone messages me?"</td><td>web push, relay consent given</td><td>no device has ever subscribed</td><td>finding</td></tr><tr><td>4</td><td>"Can I take my data out?"</td><td>export code in nine files</td><td>no export has ever been produced</td><td>finding</td></tr><tr><td>5</td><td>"Does a call actually work?"</td><td>LiveKit, one region, doctor green</td><td>zero calls placed</td><td>finding</td></tr><tr><td>6</td><td>"Can I run it as a desktop app?"</td><td>rebranded Electron sources in the fork</td><td>zero releases; no artifact ever built</td><td>finding</td></tr></tbody></table>
+<h2>3. The six measurements</h2>
+<h3>3.1 A second key to the admin panel</h3>
+<p><em>First, because everything else depends on being able to administer.</em></p>
+<p>Give a second account administrative access, or a keeper account that exists only for recovery, and write down the path back in if the primary is lost.</p>
+<ul><li>Rules: the second admin is a named person, not a shared login; the recovery path is</li></ul>
+<p>executed once as a drill rather than described; the drill does not depend on a session that only the lost account could create.</p>
+<ul><li>Pass: a second account opens <code>/admin</code> and sees the overview; the recovery drill is run</li></ul>
+<p>once end to end with the time it took recorded; <code>users</code> shows exactly two rows with <code>acls: ["*"]</code> and no more.</p>
+<h3>3.2 Search that returns the message</h3>
+<p><em>Second, because it is broken rather than merely unproven.</em></p>
+<p>Fill the message index, then prove a query finds a word that exists and returns nothing for one that does not.</p>
+<ul><li>Rules: the index is filled by the instance's own indexing path, never by inserting</li></ul>
+<p>documents by hand; a rebuild is a supported operation, not a one-off script; an empty result reads as "nothing found", not as an error.</p>
+<ul><li>Pass: <code>numberOfDocuments</code> on the <code>messages</code> index equals the <code>messages</code> row count;</li></ul>
+<p>searching a distinctive word from message 3 returns message 3 and only message 3; searching nonsense returns the empty state; both checked at 390 px and in the desktop client.</p>
+<h3>3.3 A notification that reaches a phone</h3>
+<p><em>Third, because "push is configured" and "my phone buzzed" are different claims.</em></p>
+<ul><li>Rules: it must arrive with the tab closed, not only while a window is focused;</li></ul>
+<p>the test message comes from the second account, not from the same user; a failed subscription is reported in words a person can act on.</p>
+<ul><li>Pass: one device subscribed; a message from the other account raises a notification</li></ul>
+<p>within 10 seconds with the browser closed; the notification opens the right channel; the subscription survives a browser restart.</p>
+<h3>3.4 An export that produces a file</h3>
+<p><em>Fourth, because "you can take your data" is a promise until a file exists.</em></p>
+<ul><li>Rules: the export is the upstream path, untouched; what it contains is stated before</li></ul>
+<p>it is trusted; a missing attachment is a failure, not a partial success.</p>
+<ul><li>Pass: an export downloads and unzips; it contains all 9 messages and all 5</li></ul>
+<p>attachments; the file's size and timestamp are recorded; a second import of it is refused or explained rather than silently half-applied.</p>
+<h3>3.5 A call that has actually been made</h3>
+<p><em>Fifth, because a green health check is not a working microphone.</em></p>
+<ul><li>Rules: a real two-device call, not a self-join; measured join time and measured audio</li></ul>
+<p>in both directions; the result is recorded whether it passes or fails.</p>
+<ul><li>Pass: 60 seconds of two-way audio; join under 3 seconds on the same network; the call</li></ul>
+<p>ends cleanly with no orphaned voice state left in the store.</p>
+<h3>3.6 A desktop build that exists — or a decision that it never will</h3>
+<p><em>Sixth, because a rebranded shell nobody can download is a claim, not a product.</em></p>
+<ul><li>Rules: either produce one artifact for one platform and launch it, or strike the</li></ul>
+<p>desktop claim from <code>REBRAND.md</code> and say plainly that the web app is the client. Both are honest; leaving it ambiguous is not.</p>
+<ul><li>Pass (if built): an artifact in GitHub releases, launched, showing the seal and the</li></ul>
+<p>name in the title bar and about box, with the version matching the server.</p>
+<ul><li>Pass (if struck): <code>REBRAND.md</code> lists the desktop identity files as unused, and no</li></ul>
+<p>document claims a desktop build.</p>
+<h2>4. Order, and across waves</h2>
+<ol><li><strong>3.1 second admin</strong> — the only item that protects the ability to fix the rest.</li><li><strong>3.2 search</strong> — already broken; cheapest genuine repair on the list.</li><li><strong>3.3 push</strong> — needs a phone and a second account, both of which exist.</li><li><strong>3.4 export</strong> — one run, one file, one record.</li><li><strong>3.5 call</strong> — needs two devices and a quiet ten minutes.</li><li><strong>3.6 desktop</strong> — a build or a deletion; both are cheap and neither is urgent.</li></ol>
+<p>Across waves: wave 1 runs first except for 3.1 and 3.2, which are cheap and belong before the gate is built — there is no sense proving an instance that cannot be administered or searched. Everything else in this wave waits until wave 1's restore drill exists, because every measurement below writes data.</p>
+<h2>5. Considered and rejected</h2>
+<ul><li><strong>New messaging features.</strong> Upstream has threads, forums, reactions, invites with</li></ul>
+<p>expiry, DMs, read states. Nine messages do not need a tenth feature.</p>
+<ul><li><strong>Federation / ActivityPub.</strong> There is signing material in the tree and no audience for</li></ul>
+<p>it. A private instance that federates stops being private.</p>
+<ul><li><strong>A mobile app.</strong> Fluxer's mobile client is a separate Flutter repository; forking a</li></ul>
+<p>second stack to serve two accounts is a maintenance bill with no invoice.</p>
+<ul><li><strong>Screenshare and stream tuning.</strong> Rejected until a call has been made at all — 3.5 is</li></ul>
+<p>the prerequisite, not a competitor.</p>
+<ul><li><strong>Theme v2, badges, bots, an agent in the guild.</strong> Same reasons as wave 1: one accent,</li></ul>
+<p>no audience, and authorship stays human.</p>
+<ul><li><strong>Rewriting the search indexing path to be "better".</strong> The upstream path is the one the</li></ul>
+<p>project tests; the fix is to make it run here, not to out-design it.</p>
+<h2>6. Correction</h2>
+<p>Wave 1 recorded <strong>8 messages</strong>; this wave records <strong>9</strong>. The number moved while the planning was happening, which is the most useful fact in either document: the instance is not a museum piece, someone is using it, and any plan that treats it as frozen will be wrong within the hour. Both documents keep the number they measured, with the date, rather than being quietly updated to agree.</p>
+<h2>7. Open questions for the owner</h2>
+<ol><li>Who is the second administrator — <code>eleven</code>, or a keeper account that never posts?</li><li>Is this week realistic for the phone test in 3.3, or should it wait for a device you</li></ol>
+<p>actually carry?</p>
+<ol><li>Desktop: build one for Linux (cheap, testable here) or strike the claim?</li></ol>
+<h2>8. When to stop planning</h2>
+<p>This is the second wave, and it is the last one worth writing. Beyond it the honest move is to stop producing documents and start producing artifacts, in this order: the restore drill, the invite door, the second admin, the message index. If a third document is ever tempting, the test is whether the first two waves have any ticked boxes; if they do not, a third plan is a way of avoiding the first one.</p>
+<h2>Change log</h2>
+<ul><li>12 Nov 2026 — first issue. Written after wave 1, measured an hour later: 9 messages,</li></ul>
+<p>0 indexed, 1 admin, 0 releases.</p></body></html>
