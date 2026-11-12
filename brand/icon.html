@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  html,body{margin:0;padding:0;width:512px;height:512px;background:transparent;overflow:hidden}
+  .wrap{position:relative;width:512px;height:512px}
+  .bg{position:absolute;inset:0;border-radius:112px;
+      background:
+        radial-gradient(120% 120% at 28% 18%, #2C1D50 0%, #1B1330 46%, #0B0A12 100%);
+      box-shadow: inset 0 0 0 1px rgba(233,182,90,0.16);}
+  .glow{position:absolute;inset:0;border-radius:112px;
+        background:radial-gradient(58% 58% at 50% 54%, rgba(233,182,90,0.20) 0%, rgba(233,182,90,0) 70%);}
+  .sigil{position:absolute;inset:0;display:grid;place-items:center}
+</style></head>
+<body><div class="wrap">
+  <div class="bg"></div><div class="glow"></div>
+  <div class="sigil">
+    <svg width="340" height="340" viewBox="0 0 512 512" fill="none">
+      <path d="M256 72 L400 256 L256 440 L112 256 Z" stroke="#E9B65A" stroke-width="18" stroke-linejoin="round"/>
+      <path d="M256 132 L256 380" stroke="#E9B65A" stroke-width="9" opacity="0.42"/>
+      <path d="M148 256 L364 256" stroke="#C9C2DB" stroke-width="7" opacity="0.30"/>
+      <circle cx="256" cy="256" r="62" stroke="#E9B65A" stroke-width="7" opacity="0.55"/>
+      <circle cx="256" cy="256" r="38" fill="#E9B65A"/>
+    </svg>
+  </div>
+</div></body></html>
