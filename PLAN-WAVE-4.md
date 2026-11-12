@@ -124,6 +124,27 @@ and verify. That was wrong: **`rexctl restore <file>` exists as a top-level comm
 read `backup --help` and stopped. The drill run here (extract, `sha256sum -c`, `pg_restore -l`)
 is still worth having as a smoke test, but the real path back is one rexctl command.
 
+## 2c. The message index, re-measured
+
+Wave two called the empty `messages` index a defect. The measurement was right; the
+inference was not. What is actually true:
+
+- Every one of the nine channels has `indexed_at = NULL`. No channel has ever been indexed.
+- The `messages` index holds 0 documents and was last written at 14:01:07 — the second it
+  was created.
+- Messages sent at 15:43, 22:16 and 22:26 were not indexed. The API logged **no** attempt
+  and no error: `MessageSearchService.indexMessage` returns silently when
+  `getMessageSearchService()` is null, and nothing else logs on that path.
+- Indexing is designed as a **per-channel job** (`indexChannelMessages`), queued by
+  `queueIndexingChannels` from `channelNeedsReindexing(channel.indexedAt)` — which is true
+  for all nine channels — i.e. triggered by a search, not by sending a message.
+
+So the index is *cold*, not necessarily broken, and the two are told apart by one action:
+search for a word that is in a message. If results appear and the index fills, the design
+is lazy and correct. If they appear but the next message does not index, send-time indexing
+is the defect. Until one search has run, "0 documents" measures the instance's age, not its
+health.
+
 ## 3. Order
 
 1. **Restore drill** (wave 1, 1.2) — before any deploy, not after. A backup that has never
