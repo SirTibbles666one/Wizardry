@@ -1,0 +1,105 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — operator plan</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>Wizardry — operator plan</h1>
+<p><em>Written 12 November 2026, against the live instance at <code>wizardry.slothlee.xyz</code> on Fluxer release 2026.1112.20122. Every number below was measured on that instance; the command that produced it is named beside it.</em></p>
+<p>This is a plan for running and finishing a <strong>private, self-hosted instance</strong>, not for forking a chat platform. Wizardry is a fork of Fluxer, and the fork's job is to carry the name, the seal and the desktop build — not to re-implement messaging. Anything the upstream does well is left alone.</p>
+<h2>1. Facts</h2>
+<table><thead><tr><th>Fact</th><th>Value</th><th>How known</th></tr></thead><tbody><tr><td>Release</td><td>Fluxer <code>2026.1112.20122</code></td><td><code>rexctl status</code></td></tr><tr><td>Host</td><td>4 vCPU / 8 GB, 11 GB of 75 GB used, 1 GB RAM in use</td><td><code>df -h /</code>, <code>free -g</code></td></tr><tr><td>Accounts</td><td>2 (tibs, eleven)</td><td><code>count(*)</code> on <code>users</code> in the KV store</td></tr><tr><td>Guilds</td><td>1 — "ooo aa up the ra", no icon</td><td><code>guilds</code> row</td></tr><tr><td>Channels / messages / attachments</td><td>9 / 8 / 5</td><td><code>count(*)</code> per table</td></tr><tr><td>Guild members</td><td>2</td><td><code>guild_members</code></td></tr><tr><td>Store size</td><td>349 rows, 616 kB</td><td><code>pg_total_relation_size('fluxer_kv')</code></td></tr><tr><td>Registration</td><td><strong>open</strong>, no allowed domains, admin URLs enabled</td><td><code>registration_config</code></td></tr><tr><td>Instance notice</td><td>none</td><td><code>instance_notice</code> absent</td></tr><tr><td>Community / billing config</td><td>none / none</td><td><code>instance_configuration</code></td></tr><tr><td>Backups</td><td><strong>1</strong> (manual, today, 2.2 MB), <strong>0 scheduled jobs</strong></td><td><code>/opt/fluxer/backups</code>, <code>crontab -l</code>, <code>systemctl list-timers</code></td></tr><tr><td>Auto-upgrade</td><td>off</td><td><code>rexctl auto-upgrade</code></td></tr><tr><td>Email</td><td>SMTP <code>smtp.slothlee.xyz:25</code> STARTTLS, <code>noreply@slothlee.xyz</code></td><td><code>instance_integrations_config</code></td></tr><tr><td>TLS</td><td>valid to 10 Feb 2027</td><td><code>openssl s_client</code></td></tr><tr><td>DNS</td><td>A <code>78.47.152.93</code>, <strong>no AAAA</strong></td><td><code>dig</code> via 1.1.1.1</td></tr><tr><td>Branding</td><td>name, seal, favicons, theme <code>#1b1330</code>, custom CSS — live</td><td>discovery document and served HTML</td></tr><tr><td>Operator tooling in the fork</td><td>none — no <code>scripts/</code> directory</td><td><code>ls</code></td></tr></tbody></table>
+<p>Two numbers decide the shape of this plan: <strong>2 accounts, 8 messages</strong>. Nothing here needs a feature that scales. Everything here needs to survive the owner forgetting about it.</p>
+<h2>2. The questions worth answering</h2>
+<p>Each feature below answers a question an operator asks out loud. Nothing is on this list because it would be impressive.</p>
+<table><thead><tr><th>#</th><th>Question</th><th>Evidence of absence or gap</th><th>Kind</th></tr></thead><tbody><tr><td>1</td><td>"Can anyone just walk in?"</td><td><code>registration.mode = open</code>, <code>allowed_email_domains: []</code></td><td>finding</td></tr><tr><td>2</td><td>"Can I get it back if it breaks?"</td><td>1 manual backup, 0 scheduled jobs, never restored once</td><td>finding</td></tr><tr><td>3</td><td>"Did that change do what I think it did?"</td><td>no gate; today every branding change was verified by hand, six checks per restart</td><td>finding</td></tr><tr><td>4</td><td>"Can I change the instance without hand-writing JSON?"</td><td>three bespoke KV scripts written and run today; repo carries no operator tooling</td><td>finding</td></tr><tr><td>5</td><td>"What does someone see on day one?"</td><td>no notice, no pinned welcome, 8 messages across 9 channels</td><td>finding</td></tr><tr><td>6</td><td>"Does it look like Wizardry everywhere the name appears?"</td><td>guild has no icon or banner; <code>BANNER</code>, <code>INVITE_SPLASH</code>, <code>ANIMATED_ICON</code> are enabled and unused</td><td>finding</td></tr></tbody></table>
+<h2>3. The six features</h2>
+<h3>3.1 Invite-only front door</h3>
+<p><em>Phase 1 · protects the instance</em></p>
+<p>Turn registration from open to invite-only, and keep the invite card on-brand so an invited person's first impression is the seal rather than a generic join page.</p>
+<ul><li>Rules: the instance refuses self-signup; an invite is the only door; an expired</li></ul>
+<p>invite says so in words, never in an error code. Existing accounts keep working.</p>
+<ul><li>Pass: <code>POST /api/v1/auth/register</code> returns the closed registration error; one invite</li></ul>
+<p>link still creates an account end to end; the invite page renders the seal at 390 px wide with no broken image.</p>
+<ul><li>Decision needed: open to <code>@slothlee.xyz</code> only, or strictly invites? (see §7)</li></ul>
+<h3>3.2 A backup that runs without me</h3>
+<p><em>Phase 1 · protects the instance</em></p>
+<p>Nightly snapshot, weekly verification, and one restore drilled for real.</p>
+<ul><li>Rules: a failed backup is louder than a successful one; the drill restores into a</li></ul>
+<p>scratch folder, never over the live store; retention keeps three (current setting).</p>
+<ul><li>Pass: seven consecutive nightly archives with zero failures, each passing</li></ul>
+<p><code>rexctl backup verify</code>; one documented restore of today's archive with the wall-clock time it took; the oldest archive ages out on schedule rather than on a hunch.</p>
+<h3>3.3 Restart gate</h3>
+<p><em>Phase 2 · proves the instance</em></p>
+<p>One command that answers "is Wizardry still Wizardry" after any restart, deploy or <code>rexctl upgrade</code>.</p>
+<ul><li>Checks: <code>rexctl doctor</code>; <code>/</code>, <code>/.well-known/fluxer</code>, <code>/app</code>, <code>/admin</code> status codes;</li></ul>
+<p>branding present in the served HTML (name, theme colour, both favicons, custom CSS block); the sign-in page rendered in headless Chromium with the mark loaded and the primary button's label colour not equal to its fill; the discovery document agreeing with the branding row.</p>
+<ul><li>Rules: it fails on a missing asset, not only on a non-200; it never writes anything;</li></ul>
+<p>a check it cannot compute reports as a warning with the reason, never as a pass.</p>
+<ul><li>Pass: one command, exit 0 only when all eight checks pass; proven by breaking one</li></ul>
+<p>thing on purpose (wrong favicon URL) and watching it fail.</p>
+<h3>3.4 Operator CLI</h3>
+<p><em>Phase 2 · proves the instance</em></p>
+<p>The three operations I hand-wrote today — apply branding, transfer guild ownership, append an audit entry — as checked commands with <code>--dry-run</code>.</p>
+<ul><li>Rules: every command prints the diff it would make before making it; the audit entry</li></ul>
+<p>is written by the tool, not remembered by the operator; no command invents a value it was not given; re-running is idempotent.</p>
+<ul><li>Pass: three commands (<code>brand</code>, <code>own</code>, <code>audit</code>), each with a dry run, each re-runnable</li></ul>
+<p>with zero diff on the second pass; the KV rows they write match what the client reads.</p>
+<h3>3.5 A welcome that isn't blank</h3>
+<p><em>Phase 3 · presents the instance</em></p>
+<p>A first-run notice and one pinned message, in the voice the brand already uses.</p>
+<ul><li>Rules: no feature tour, no carousel, no "getting started" checklist — one notice, one</li></ul>
+<p>pinned message, three lines each; it says what the instance is for and how to get an invite.</p>
+<ul><li>Pass: a test account's first screen shows the notice; the pinned message is the first</li></ul>
+<p>thing in <code>#general</code>; both read correctly at 390 px and in the desktop client.</p>
+<h3>3.6 Identity surfaces finished</h3>
+<p><em>Phase 3 · presents the instance</em></p>
+<p>Guild icon, banner and invite splash from the same seal, so the name appears nowhere as a placeholder.</p>
+<ul><li>Rules: same palette as <code>brand/BRAND.md</code>, no second mark, no mascot; art is generated</li></ul>
+<p>from the HTML sources in <code>brand/</code>, not drawn anew.</p>
+<ul><li>Pass: guild icon 512×512, banner 960×540, splash 1920×1080, all rendering in the</li></ul>
+<p>client; the invite card and the guild header both show the seal; zero default-art placeholders left.</p>
+<h2>4. Order, and what would change it</h2>
+<ol><li><strong>Backup that runs without me</strong> (3.2) — the only item whose absence can destroy the</li></ol>
+<p>other five.</p>
+<ol><li><strong>Invite-only front door</strong> (3.1) — cheap, and it closes a door that is currently open</li></ol>
+<p>to the internet.</p>
+<ol><li><strong>Restart gate</strong> (3.3) — every later change depends on being able to prove it.</li><li><strong>Operator CLI</strong> (3.4) — pays for itself the second time branding changes.</li><li><strong>Identity surfaces</strong> (3.6) — visible, but nothing is broken without it.</li><li><strong>Welcome</strong> (3.5) — last, because its content depends on who is being welcomed.</li></ol>
+<p>If only one thing is built: <strong>3.2</strong>, and specifically the restore drill. A backup that has never been restored is a rumour.</p>
+<h2>5. Considered and rejected</h2>
+<ul><li><strong>Forking the API to add messaging features.</strong> The fork exists to carry identity and</li></ul>
+<p>the desktop build. Every feature above is operator-level; none touches the Rust tree.</p>
+<ul><li><strong>Turning on premium/billing.</strong> <code>instance_billing_config</code> is absent and premium is off.</li></ul>
+<p>Selling to two accounts is a support burden with no upside.</p>
+<ul><li><strong>Message search tuning.</strong> Eight messages. Meilisearch is running and unbothered.</li><li><strong>Voice quality work.</strong> LiveKit reports healthy and <code>rexctl doctor</code> agrees; there is</li></ul>
+<p>nobody on the other end of a call yet.</p>
+<ul><li><strong>Custom badges, themes marketplace, multiple palettes.</strong> <code>BRAND.md</code> says one accent,</li></ul>
+<p>and badges need someone who wants one. Both are answers to a question nobody asked.</p>
+<ul><li><strong>An AI agent in the guild that writes records.</strong> It would put a model's words where a</li></ul>
+<p>person's belong; the plan keeps authorship human.</p>
+<ul><li><strong>Fixing the mail server's "everything is encrypted" symptom in this document.</strong> It is</li></ul>
+<p>a different product, and it still needs one screenshot to diagnose.</p>
+<h2>6. Correction</h2>
+<p>Earlier in this arc I read "the reset link says 404" as a Wizardry routing problem and spent effort on the app's <code>/reset</code> route. The link was the <strong>mail server's</strong> recovery email, which built its URL from the mail domain — so it pointed at the brochure site, which has no reset page. Fixed in that server's <code>send_recovery</code>, rebuilt and deployed; the app's <code>/reset</code> was never broken. Recording it here so the next session does not re-derive the wrong fix.</p>
+<h2>7. Open questions for the owner</h2>
+<ol><li>Signup: invites only, or open to <code>@slothlee.xyz</code> addresses? (Both are one setting.)</li><li>Who else is joining, and roughly when? Phase 3 exists for them, not for you.</li><li>Is the guild staying "ooo aa up the ra" with no icon, or should it carry the seal?</li><li>IPv6: add the AAAA record yourself, or hand me a Cloudflare token to do it?</li></ol>
+<h2>8. What would falsify this plan</h2>
+<p>If ninety days pass with <strong>two accounts and no new member</strong>, phases 2 and 3 are decoration: the instance is a private tool, and the honest plan collapses to §3.2 plus §3.1, with everything else struck. The plan should then be re-issued shorter rather than defended.</p>
+<h2>Change log</h2>
+<ul><li>12 Nov 2026 — first issue. Measured against the live instance; branding already</li></ul>
+<p>shipped, so it is not a feature here, it is a fact.</p></body></html>
