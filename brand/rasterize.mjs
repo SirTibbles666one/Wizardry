@@ -57,6 +57,7 @@ const { result: { sessionId } } = await send('Target.attachToTarget', { targetId
 const cmd = (m, p) => send(m, p, sessionId);
 
 await cmd('Page.enable');
+await cmd('Emulation.setDefaultBackgroundColorOverride', {color: {r: 0, g: 0, b: 0, a: 0}});
 await cmd('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
 await cmd('Page.navigate', { url: 'file://' + path.resolve(SRC) });
 await new Promise((r) => setTimeout(r, 1200));
