@@ -340,17 +340,32 @@ fn strip_link_preview_metadata(html: &str) -> String {
     replace_elements(html, r#"<meta name="description""#, ">", "")
 }
 
+/// Fork copy. The instance branding snapshot carries a name and images but no
+/// description, so a pasted invite had no sentence under it and no card large
+/// enough to survive a timeline. These two are the fork's own defaults.
+const BRAND_TAGLINE: &str = "A private forest for people who talk slowly.";
+const BRAND_CARD_IMAGE: &str =
+    "https://raw.githubusercontent.com/SirTibbles666one/Wizardry/main/brand/card.png?v=1";
+
 fn link_preview_tags(product_name: &str, image_url: Option<&str>) -> String {
+    let name = escape_html(product_name);
+    let tagline = escape_html(BRAND_TAGLINE);
+    let card = if BRAND_CARD_IMAGE.is_empty() {
+        image_url.map(escape_html)
+    } else {
+        Some(BRAND_CARD_IMAGE.to_owned())
+    };
     let mut tags = format!(
-        r#"<meta property="og:site_name" content="{product_name}"><meta property="og:title" content="{product_name}"><meta property="og:type" content="website">"#
+        r#"<meta property="og:site_name" content="{name}"><meta property="og:title" content="{name}"><meta property="og:type" content="website"><meta property="og:description" content="{tagline}"><meta name="description" content="{tagline}">"#
     );
-    if let Some(image_url) = image_url {
+    if let Some(card) = card {
         tags.push_str(&format!(
-            r#"<meta property="og:image" content="{}">"#,
-            escape_html(image_url)
+            r#"<meta property="og:image" content="{card}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{name} — {tagline}"><meta name="twitter:image" content="{card}">"#
         ));
     }
-    tags.push_str(r#"<meta name="twitter:card" content="summary">"#);
+    tags.push_str(&format!(
+        r#"<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{name}"><meta name="twitter:description" content="{tagline}">"#
+    ));
     tags
 }
 
@@ -863,7 +878,7 @@ mod tests {
         assert_eq!(
             apply_instance_branding(html.to_owned(), &branding),
             format!(
-                r#"<head><title>A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;</title><meta name="apple-mobile-web-app-title" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><link rel="icon" href="https://example.test/&quot;&gt;&lt;script&gt;x()&lt;/script&gt;"><link rel="apple-touch-icon" href="https://example.test/&quot;&gt;&lt;script&gt;x()&lt;/script&gt;"><meta property="og:site_name" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><meta property="og:title" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><meta property="og:type" content="website"><meta name="twitter:card" content="summary">{}</head>"#,
+                r#"<head><title>A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;</title><meta name="apple-mobile-web-app-title" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><link rel="icon" href="https://example.test/&quot;&gt;&lt;script&gt;x()&lt;/script&gt;"><link rel="apple-touch-icon" href="https://example.test/&quot;&gt;&lt;script&gt;x()&lt;/script&gt;"><meta property="og:site_name" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><meta property="og:title" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><meta property="og:type" content="website"><meta property="og:description" content="A private forest for people who talk slowly."><meta name="description" content="A private forest for people who talk slowly."><meta property="og:image" content="https://raw.githubusercontent.com/SirTibbles666one/Wizardry/main/brand/card.png?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot; — A private forest for people who talk slowly."><meta name="twitter:image" content="https://raw.githubusercontent.com/SirTibbles666one/Wizardry/main/brand/card.png?v=1"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="A &amp; B&lt;/title&gt;&lt;script&gt;x()&lt;/script&gt;&quot;"><meta name="twitter:description" content="A private forest for people who talk slowly.">{}</head>"#,
                 saturation_preboot_tag()
             )
         );

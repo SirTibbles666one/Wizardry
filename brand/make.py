@@ -21,6 +21,7 @@ CHROME = os.environ.get("CHROME_PATH", "chromium")
 
 ASSETS = [
     ("icon", 512, 512),
+    ("card", 1200, 630),
     ("symbol", 512, 512),
     ("hero", 560, 680),
     ("wordmark", 1280, 320),
