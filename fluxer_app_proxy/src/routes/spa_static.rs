@@ -90,6 +90,10 @@ fn apply_manifest_branding(
     }
     if let Some(theme_color) = &branding.theme_color {
         manifest.insert("theme_color".to_owned(), serde_json::json!(&**theme_color));
+        // The splash an installed app paints while it boots is background_color, which
+        // upstream leaves at its own grey. Without this an instance whose theme is pine
+        // flashes Discord grey every launch.
+        manifest.insert("background_color".to_owned(), serde_json::json!(&**theme_color));
     }
     if let Some(icon_url) = &branding.icon_url {
         manifest.insert(
