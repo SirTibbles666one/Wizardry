@@ -122,13 +122,21 @@ Also worth recording, because it cost an outage: writing the branding row as a J
 is not valid JSON" and serve first-run defaults, which drops the instance back to its
 setup screen. The write must be `to_jsonb(...::text)`.
 
-## 7. Open questions for the owner
+## 7. Decisions (the owner delegated all three, 12 November)
 
-1. Guild name: keep "ooo aa up the ra", or rename it to something the artwork can carry?
-2. Tagline for the link card — one line. My suggestion: *"A private forest for people who
-   talk slowly."*
-3. Does the mail carry the mascot's face, or only the wordmark? (A face in an inbox reads
-   warmer; a wordmark reads more like a service.)
+1. **Guild name: renamed to Nightgrove.** Executed — `guilds.name` changed from "ooo aa up
+   the ra", with a `GUILD_UPDATE` audit entry so the app shows it as deliberate; four
+   audit rows exist now (three from the ownership transfer, one for the rename). The name
+   is the same forest as Sloth Lee's grove, after dark, which is what this instance is.
+2. **Tagline: "A private forest for people who talk slowly."** It goes into
+   `og:description` when 3.2 is built — there is no branding field that carries a
+   description today, so writing it anywhere else would be a promise the app cannot keep.
+3. **Mail carries the mascot's face in the header**, the wordmark in the footer. A face in
+   an inbox reads as a place with a character rather than a service with a logo, and the
+   alt text plus a plain-text part covers clients that block images by default.
+
+What each decision still needs: 1 needs nothing further; 2 and 3 are gated on the builds
+below, which is why they are recorded here rather than applied.
 
 ## 8. Status board — all three waves
 
@@ -139,6 +147,7 @@ setup screen. The write must be `to_jsonb(...::text)`.
 | — | Guild ownership → `1570442583027482624`, with audit entry | 0 | **shipped** |
 | — | Theme: Sloth Lee canopy palette, Baloo 2 + Nunito | 0 | **shipped** |
 | — | Mascot: wizard sloth, six assets, two size variants | 0 | **shipped** |
+| — | Guild renamed **Nightgrove**, with audit entry | 3 | **shipped** |
 | 1.1 | Invite-only front door | 1 | blocked: owner's choice (§7 wave 1) |
 | 1.2 | Backup that runs without me + one restore drill | 1 | **next to build** |
 | 1.3 | Restart gate | 1 | planned |
@@ -153,7 +162,7 @@ setup screen. The write must be `to_jsonb(...::text)`.
 | 2.6 | Desktop build, or strike the claim | 2 | planned (0 releases) |
 | 3.1 | Manifest splash colour | 3 | **next to build** |
 | 3.2 | Link card | 3 | planned |
-| 3.3 | Guild art | 3 | blocked: owner's choice |
+| 3.3 | Guild art (name done: **Nightgrove**) | 3 | art needs one upload by the owner |
 | 3.4 | Branded transactional mail | 3 | planned |
 | 3.5 | First-run copy | 3 | planned |
 | — | AAAA record for IPv6 clients | — | blocked: no Cloudflare token |
@@ -161,6 +170,13 @@ setup screen. The write must be `to_jsonb(...::text)`.
 Two items in that table are not plans but defects: **2.2** (search indexes nothing) and
 **3.1** (the install splash is grey). They should be fixed before any planned item is
 started, because both are visible to a user who does nothing wrong.
+
+Evidence gathered on 2.2 while writing this: `fluxer-worker-1` is up and healthy, holds
+the search environment, and its batch lane logs `syncDiscoveryIndex` every fifteen minutes
+("No discoverable guilds to sync") — so the queue is alive and no message-index job is ever
+enqueued. The index was created at 14:01 and has never been written to since. The next step
+is not a rebuild but a read: find whether message indexing is gated behind a feature flag,
+a lane that is not running, or a code path that only fires on edit.
 
 ## 9. When to stop planning
 

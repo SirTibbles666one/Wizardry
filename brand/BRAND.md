@@ -94,6 +94,18 @@ composited by the app rather than cropped by it.
 - Minimum sizes: badge 32 px, bust 64 px, wordmark 96 px wide.
 - On honey, the mark is never placed; honey is for text and controls.
 
+## Voice
+
+One sentence, used wherever the instance describes itself: **"A private forest for people
+who talk slowly."** It is the tagline for the link card and the first line of the notice.
+Rules: no exclamation marks, no "community", no growth language, British spelling.
+
+Name of the guild: **Nightgrove** — the same forest as Sloth Lee's grove, after dark.
+
+Mail carries the **mascot's face** in the header and the wordmark in the footer, always
+with alt text and a plain-text part, because a face reads as a place rather than a service
+and the text covers clients that block images.
+
 ## What stays deliberately unchanged
 
 - Fluxer's UI artwork, icons and illustrations — CC BY-SA 4.0, and not ours to redraw.
