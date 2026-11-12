@@ -1,0 +1,21 @@
+{
+  "name": "wizardry",
+  "version": "0.1.0",
+  "description": "Guided setup for Fluxer servers: a bot that reads a server, plans a layout, and applies it only when someone confirms.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "fluxer",
+    "bot",
+    "setup",
+    "wizard"
+  ],
+  "license": "MIT",
+  "private": false
+}
