@@ -97,6 +97,33 @@ five jobs that queue forever is the only option that is definitely wrong.
 - Pass: either a workflow run completes green on our own runner, or `.github/workflows/`
   is empty and the READMEs explain why.
 
+## 2a. What actually happened (12 November, same day)
+
+**The build works.** `wizardry/app-proxy:<sha>`, 874 MB, about twelve minutes cold and six
+warm, SPA plus Rust proxy, on `wizardry-01`. The falsifier in §6 did not trigger.
+
+Three things were learned by doing it, and all three are load-bearing:
+
+1. **`FLUXER_SELF_HOSTED=true` is not optional.** The first image built without it and the
+   proxy came up serving **upstream defaults** — `/manifest.json` said `Fluxer`,
+   `#4641D9`, `#2b2d31`. The branding merge only compiles into the self-hosted variant.
+   The workflow already passes that arg (`.github/workflows/build-app-proxy-self-hosted.yaml`
+   line 180); a hand-run build has to pass it too.
+2. **Deploy is `custom.compose.yml` plus `rexctl restart`.** Compose directly is refused —
+   rexctl guards the stack with `FLUXER_SETTINGS_LOADED` and tells you to use rexctl or
+   `rexctl eject`. The supported override is a service block in `custom.compose.yml`, which
+   rexctl keeps across upgrades.
+3. **The revert is restoring one file.** `cp custom.compose.yml.orig custom.compose.yml`
+   and a restart put the container back on the upstream digest
+   `sha256:779632ee…` — executed deliberately, twice, in under a minute each.
+
+## 2b. Correction
+
+Wave one said a restore is manual because `rexctl backup` offers only keep, list, location
+and verify. That was wrong: **`rexctl restore <file>` exists as a top-level command** — I
+read `backup --help` and stopped. The drill run here (extract, `sha256sum -c`, `pg_restore -l`)
+is still worth having as a smoke test, but the real path back is one rexctl command.
+
 ## 3. Order
 
 1. **Restore drill** (wave 1, 1.2) — before any deploy, not after. A backup that has never
