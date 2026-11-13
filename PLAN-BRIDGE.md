@@ -1,9 +1,9 @@
 # The bridge: what it is, and what building it would mean
 
-> **Rejected by the owner, 13 November 2026.** There is no Discord bridge in this product and
-> there will not be one. This document is kept as the record of what the idea was, what it would
-> have cost, and why it was declined — so it is not re-proposed, and so the answer is written down
-> rather than remembered. Nothing below is planned work.
+**REJECTED BY THE OWNER — 13 November 2026.** There is no Discord bridge in this product and there
+will not be one. This document is kept as the record of what the idea was, what it would have cost,
+and why it was declined, so it is not re-proposed in six weeks with a fresh coat of paint. Nothing
+below is planned work.
 
 The short answer first, because the idea is easier to judge once it is concrete.
 
