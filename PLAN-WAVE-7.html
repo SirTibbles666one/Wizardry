@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — what you already own</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>Wizardry — what you already own and have never opened</h1>
+<p>Seventh wave, and a different question again. Waves five and six asked what is missing and what the place is for. This one starts from the opposite direction: <strong>nine capabilities are installed, compiled and healthy on <code>wizardry-01</code>, and not one of them has ever been used.</strong></p>
+<p>The measurement is the wave. Everything else follows from it.</p>
+<h2>1. What was measured</h2>
+<p>Two queries, both against the live instance on 13 November: one on the fork's source, one on the database.</p>
+<p>The source check asks whether a capability exists at all — how many files in <code>fluxer_api/src</code> carry it. The database check asks whether it has ever produced a row: <code>fluxer_kv</code> holds 57 tables that have been written to at least once, and a capability that is never used has no table there.</p>
+<table><thead><tr><th>Capability</th><th>In the source</th><th>Ever written</th><th>Reading</th></tr></thead><tbody><tr><td>Invites</td><td>18 files (<code>createInvite</code>, <code>CreateInvite</code>)</td><td><strong>no invite table exists</strong></td><td>the only way in is an admin registration URL</td></tr><tr><td>Webhooks</td><td>38 files</td><td>no webhook table</td><td>nothing outside the instance can post into it</td></tr><tr><td>Custom emoji</td><td>15 files</td><td>no emoji table</td><td>the mascot has no voice</td></tr><tr><td>Stickers</td><td>46 files</td><td>no sticker table</td><td>—</td></tr><tr><td>Threads</td><td>6 files</td><td>no thread exists — <code>guild_thread_state</code> holds one row for the guild, and the nine channels are categories, text and voice</td><td>every reply is a new line in the same room</td></tr><tr><td>Pins</td><td>8 files</td><td>no pin table</td><td>nothing in a channel can be made to stay put</td></tr><tr><td>Scheduled events</td><td>6 files</td><td>no event table</td><td>there is no reason to come back on a particular evening</td></tr><tr><td>Polls</td><td>14 files</td><td>no poll table</td><td>the only way to answer is to type</td></tr><tr><td>Bookmarks</td><td><code>BookmarksBottomSheet</code>, <code>requestToggleBookmark</code></td><td>no bookmark table</td><td>nothing has been saved</td></tr></tbody></table>
+<p>Everything else that is used is small and unsurprising: 12 messages, 2 users, 1 guild, 5 read states, 2 reactions, 4 attachments, 186 audit rows. The instance is a working chat with a beautiful coat, and eight of its nine rooms have never had the light on.</p>
+<h2>2. The eight ideas</h2>
+<p>None of these is a new backend. Seven are presets, flows or content on capability that already ships; the eighth is one page. That is what makes this wave worth more than the last two.</p>
+<h3>2.1 An invite that reads like an invitation</h3>
+<p>Invite creation exists and has never been called. Make the flow: create an invite, see it the way the recipient will see it, set how long it lives and how many people it admits.</p>
+<ul><li>An invite is previewed before it is sent, with the splash and the guild name as the recipient sees them.</li><li>Every invite carries an expiry. An invite with no end is a key left under the mat.</li><li>The join screen says who invited you, because a person is a better reason than a link.</li></ul>
+<h3>2.2 Threads for the conversations that deserve one</h3>
+<p>Threads ship and have never been used. A thread is the natural shape for two people continuing a thought without splitting the room, and it is what "talk slowly" needs: a reply that does not interrupt.</p>
+<ul><li>One click from any message; no separate thread browser to learn first.</li><li>A thread never notifies the whole channel — only the people in it.</li><li>Threads auto-archive, so an abandoned thread tidies itself up.</li></ul>
+<h3>2.3 The mascot as an emoji pack</h3>
+<p>Custom emoji ship; the pack is content. Twelve expressions of the wizard sloth at 128×128, drawn from the same shapes as the icon, named in the product's voice.</p>
+<ul><li>Every emoji reads at 32 px: fewer shapes, no text, no thin lines.</li><li>The set is small enough to learn — twelve, not a hundred and twenty.</li><li>Emoji are identity, not decoration: they should be the thing people use instead of a word.</li></ul>
+<h3>2.4 Pins, so something can stay put</h3>
+<p>Pins ship and nothing is pinned. The handbook, the rules and the three things a new person needs should be pinned in one channel, and the channel should be the noticeboard from wave six.</p>
+<ul><li>A pinned message carries a date, so "how we do things" has a history.</li><li>Pins are for things true for months, not for announcements.</li><li>The noticeboard's pins are the first thing a new member is pointed at.</li></ul>
+<h3>2.5 A weekly hour, as an event</h3>
+<p>Scheduled events ship and none exists. The cheapest reason to return is a time: one evening a week, in voice, with no agenda.</p>
+<ul><li>The event exists whether or not anyone comes; an empty room is not a failure.</li><li>It is named for the place, not for the activity.</li><li>Voice rooms are the same rooms; the event is a marker, not a new surface.</li></ul>
+<h3>2.6 Webhooks, so the place is useful before it is social</h3>
+<p>Webhooks ship and none exists. One channel can carry the outside world — the repository's commits, a feed, the backup result — which makes the instance worth opening on a day when nobody has spoken.</p>
+<ul><li>A webhook posts as itself, never as a person.</li><li>One channel, so the feed can be muted as a unit.</li><li>No webhook may post into a conversation channel.</li></ul>
+<h3>2.7 Polls, for the people who will not type</h3>
+<p>Polls ship and none has been run. A poll is the lowest-effort way to say something, and the person who will not type a paragraph will click a button.</p>
+<ul><li>A poll is a question with a date; it closes.</li><li>No anonymous polls: in a room of five, anonymity is a lie.</li><li>Polls are for decisions the room actually needs, which means rarely.</li></ul>
+<h3>2.8 A front door for strangers</h3>
+<p>Everything above serves someone who is already inside. The first thing a stranger sees today is a login form. One public page — the card art, one sentence, what this place is, and how to ask for an invitation — is a different first impression, and it is the only new surface in this wave.</p>
+<ul><li>The page carries no sign-up form, because registration is closed.</li><li>It says how to ask, not who to ask, and it does not publish anyone's address.</li><li>It is static, cacheable, and works with JavaScript off.</li></ul>
+<h2>3. Order</h2>
+<p>Cheapest first, because this wave's whole argument is that most of it is already paid for:</p>
+<ol><li><strong>2.4 pins, 2.6 one webhook, 2.5 one event</strong> — three configuration actions, no build. They can be done the day the first guest arrives.</li><li><strong>2.3 the emoji pack</strong> — art only, and it closes wave five's identity kit.</li><li><strong>2.1 the invite flow</strong> — a small app change on top of shipped capability, and the first thing anyone actually needs.</li><li><strong>2.7 polls</strong> — a channel setting and a habit, no code.</li><li><strong>2.2 threads</strong> — the one that needs a real interface decision.</li><li><strong>2.8 the front door</strong> — one static page, and the last thing worth doing, because it is for people who are not here yet.</li></ol>
+<h2>4. Considered and rejected</h2>
+<ul><li><strong>Turning on every unused capability at once.</strong> Eight rooms with the light on and nobody in them is a worse impression than four that are used.</li><li><strong>Public discovery of the guild.</strong> It contradicts the invite-only front door settled in wave three, and a directory listing is how a private forest stops being one.</li><li><strong>A bot that posts the feed rather than a webhook.</strong> Bots need a persona and a token; a webhook needs a URL.</li><li><strong>Custom badges.</strong> The catalogue exists (<code>custom_badge_catalog</code>, 100 per user) and badges only mean something once there are enough people for them to distinguish.</li><li><strong>Voice on a schedule as a second weekly event.</strong> One is a rhythm; two is a calendar.</li></ul>
+<h2>5. The honest bit</h2>
+<p>Running count: eighteen rows in wave three, eight in five, six in six, eight here. Thirty-two planned became forty against six built — but this wave is the first whose items are mostly configuration, art and one page, so the cost column is not comparable with the last two.</p>
+<p>The recommendation stands and does not change: build wave five's three (update offer, offline page, search truth) first. This wave is what to do <em>in the hour after the first guest accepts an invite</em>, and that hour is the only thing that can make any of it matter.</p>
+<p>Falsifier: the wave assumes that unused capability is a <em>reason people are not here</em>. The alternative reading — that nobody is here because nobody has been asked — is more likely, and it costs nothing to test: one invitation, one person, one week. If they come and stay, this wave is right and the rooms matter. If they do not come, the inventory was never the problem.</p>
+<h2>6. Decisions that are yours</h2>
+<ol><li><strong>Whether the weekly hour is voice or text</strong>, which decides whether it needs a microphone or just a time.</li><li><strong>Whether the front door names Sloth Lee</strong>, which links the two places publicly or deliberately keeps them separate.</li><li><strong>Whether threads are on everywhere or only in the slow channels</strong>, which is a taste decision about how the room reads.</li></ol></body></html>
