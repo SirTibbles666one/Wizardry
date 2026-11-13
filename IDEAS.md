@@ -2,7 +2,8 @@
 
 Eight new features, written down so they stop being re-invented — and deliberately **not** added
 to the queue. `BACKLOG.md` holds nineteen items with pass criteria; this file holds the ones that
-have a case but not yet a reason to be next.
+have a case but not yet a reason to be next. One of the eight has since been rejected outright by
+the owner, which is the other thing this file is for.
 
 The rule is one line: **an idea leaves this file only by replacing something in the queue.** A
 parking lot that grows is a second backlog, and a second backlog is how the first one stopped
@@ -27,19 +28,16 @@ already, under another name?
 All eight are real gaps rather than already-shipped features wearing different words. That is the
 only reason they are written at all.
 
-## 1. A bridge to where your friends already are
+## 1. ~~A bridge to where your friends already are~~ — rejected
 
 One channel relayed to Discord and back, with names preserved and loops prevented.
 
-- **Why it is the strongest idea here:** the people who would be invited already have somewhere to
-  talk. A bridge means the instance does not have to win anyone over to be useful on day one.
-- **Cost:** high. A bot, an identity mapping, message-id mapping for edits and deletes, and an
-  attachment mirror.
-- **What it must not become:** a two-way sync of every channel. One channel, named, both ways.
-- **Falsifier:** if nobody in the target Discord actually uses the bridged channel for a week, the
-  bridge was a reason to avoid asking rather than a reason to build.
-- **Planned in full:** `PLAN-BRIDGE.md` — what it is, the three build shapes, loops, failures, the
-  outbound-afternoon MVP, and the privacy objection written plainly.
+**The owner declined this on 13 November 2026, and it is now a never rather than a park.** The
+reason is not technical: the messages would leave a server he owns and land under someone else's
+terms, and the invitation is the thing he actually wants to work — not a bypass around it.
+
+The full analysis stays on file as `PLAN-BRIDGE.md`, banner-marked as rejected, so the idea is not
+re-proposed in six weeks with a fresh coat of paint.
 
 ## 2. Mail that lands in a channel
 
@@ -129,20 +127,19 @@ Chosen threads, exported to a page anyone can read, at `wizardry.slothlee.xyz/ga
 - **Falsifier:** it should not be built until there are threads worth reading, which is Q15 and a
   year of talking. **Never, until then.**
 
-## The one that could jump the queue
+## What could jump the queue now
 
-The bridge (§1) is the only idea in this file that could reasonably displace a queued item,
-because it changes the answer to "why would anyone come here" rather than improving the room for
-people already in it.
+Nothing. The one candidate — the bridge — was the only idea here that changed *why* anyone would
+come, and the owner has declined it.
 
-It jumps only on one condition: that there is a named person in a named Discord channel who would
-use the bridged channel. Without that name, it is infrastructure for an audience that does not
-exist yet, which is the mistake this file exists to avoid repeating.
+What remains is seven ideas that improve the room for people already in it, and the queue in
+`BACKLOG.md` already orders those. That makes this file what it should be: a record of what was
+considered and why, not a second place to look for the next thing to build.
 
 ## The count, again
 
-Thirty-two distinct items, six built, nineteen queued, seven buried — and now eight parked, which
-makes forty. Nothing here is scheduled. If `BACKLOG.md`'s Q1 to Q4 are still unbuilt when this file
+Thirty-two distinct items, six built, nineteen queued, seven buried — and now seven parked and one
+rejected, which makes forty. Nothing here is scheduled. If `BACKLOG.md`'s Q1 to Q4 are still unbuilt when this file
 is next opened, the correct response is to delete three ideas from it at random, not to add
 another: an idea that has survived a month of not being built is usually not waiting for its turn,
 it is waiting to be let go.

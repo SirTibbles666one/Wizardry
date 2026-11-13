@@ -1,5 +1,10 @@
 # The bridge: what it is, and what building it would mean
 
+> **Rejected by the owner, 13 November 2026.** There is no Discord bridge in this product and
+> there will not be one. This document is kept as the record of what the idea was, what it would
+> have cost, and why it was declined — so it is not re-proposed, and so the answer is written down
+> rather than remembered. Nothing below is planned work.
+
 The short answer first, because the idea is easier to judge once it is concrete.
 
 **A bridge is a small program that sits between two chat systems and copies messages from one to
