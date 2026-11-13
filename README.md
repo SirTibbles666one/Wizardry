@@ -10,6 +10,11 @@
 A free and open source instant messaging and VoIP chat app built for friends, groups and
 communities — and yours to host.
 
+> [!NOTE]
+> **Working on this fork? Read [BACKLOG.md](./BACKLOG.md) first.** It is the one queue: nineteen
+> distinct items with pass criteria, an order, and the reasons the other twenty-six were merged or
+> buried. The `PLAN*.md` documents are history and evidence, not a to-do list.
+
 > [!IMPORTANT]
 > **Wizardry is a rebranded fork of [Fluxer](https://github.com/fluxerapp/fluxer)**, used and
 > distributed under the AGPL-3.0. The code is Fluxer's work; the product identity here is
