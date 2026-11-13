@@ -101,6 +101,7 @@ a drawing of the mascot twelve times.
 | `PLAN-WAVE-6.md` | history | the quiet stance, which has moved into `BRAND.md` |
 | `PLAN-WAVE-7.md` | history | the capability inventory: nine features, no rows |
 | **`BACKLOG.md`** | **live** | **the queue, the order, the pass criteria** |
+| `IDEAS.md` | parked | eight new features with falsifiers; nothing there enters the queue without displacing something here |
 
 ## 6. When to write another document
 

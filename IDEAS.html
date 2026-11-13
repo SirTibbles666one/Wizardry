@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — the parking lot</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>The parking lot</h1>
+<p>Eight new features, written down so they stop being re-invented — and deliberately <strong>not</strong> added to the queue. <code>BACKLOG.md</code> holds nineteen items with pass criteria; this file holds the ones that have a case but not yet a reason to be next.</p>
+<p>The rule is one line: <strong>an idea leaves this file only by replacing something in the queue.</strong> A parking lot that grows is a second backlog, and a second backlog is how the first one stopped being read.</p>
+<h2>What was measured before writing any of it</h2>
+<p>Each idea was checked against the fork, in the direction that matters: does the capability exist already, under another name?</p>
+<table><thead><tr><th>Supposed gap</th><th>What the search actually found</th><th>Verdict</th></tr></thead><tbody><tr><td>A bridge to another chat network</td><td><code>discord</code> appears in two places: guild-template import, and an unrelated certificate name. <code>relay</code> is 111 files of <strong>upload relay</strong></td><td>genuinely absent</td></tr><tr><td>Mail arriving in a channel</td><td>zero files for any inbound-email path</td><td>genuinely absent</td></tr><tr><td>Guest access</td><td>five hits, all meaning "an unclaimed account is a guest", not a read-only visitor</td><td>genuinely absent</td></tr><tr><td>Messages revealed at a date</td><td>zero hits for <code>reveal_at</code>, <code>unlock_at</code>, "time capsule"</td><td>genuinely absent</td></tr><tr><td>Watchwords</td><td>zero hits for <code>watchword</code>, <code>savedSearch</code></td><td>genuinely absent</td></tr><tr><td>A message as a shareable image</td><td>twelve hits, all the screen-share picker and image-preview fields</td><td>genuinely absent</td></tr><tr><td>Quiet hours on a schedule</td><td>zero hits for <code>quietHours</code>, <code>DoNotDisturb</code></td><td>genuinely absent</td></tr><tr><td>A public reading page</td><td>no exportable thread surface; "blog" and "public" are unrelated</td><td>genuinely absent</td></tr></tbody></table>
+<p>All eight are real gaps rather than already-shipped features wearing different words. That is the only reason they are written at all.</p>
+<h2>1. A bridge to where your friends already are</h2>
+<p>One channel relayed to Discord and back, with names preserved and loops prevented.</p>
+<ul><li><strong>Why it is the strongest idea here:</strong> the people who would be invited already have somewhere to talk. A bridge means the instance does not have to win anyone over to be useful on day one.</li><li><strong>Cost:</strong> high. A bot, an identity mapping, message-id mapping for edits and deletes, and an attachment mirror.</li><li><strong>What it must not become:</strong> a two-way sync of every channel. One channel, named, both ways.</li><li><strong>Falsifier:</strong> if nobody in the target Discord actually uses the bridged channel for a week, the bridge was a reason to avoid asking rather than a reason to build.</li></ul>
+<h2>2. Mail that lands in a channel</h2>
+<p>An address per channel — <code>general@wizardry.slothlee.xyz</code> — so a letter written by email appears as a message, with the sender as the author.</p>
+<ul><li><strong>Why it fits:</strong> the tagline is about slow talk, and email is the slowest channel that already works. The mail server is already yours and already relays for this domain.</li><li><strong>Cost:</strong> medium-high: an inbound SMTP handler, address routing, spoofing rules (DMARC is already <code>p=reject</code>), and an attachment path.</li><li><strong>What it must not become:</strong> a way to post as someone else. A message from mail is labelled as having come by mail, with the address it came from.</li><li><strong>Falsifier:</strong> if no one sends a letter in a month, the feature was a clever idea about email rather than a need.</li></ul>
+<h2>3. Guest access: look before joining</h2>
+<p>An invite that opens the guild read-only, with a join button, so an invitation can be a visit rather than a decision.</p>
+<ul><li><strong>Why it fits:</strong> the front door is closed and the invitation is the only way in. Letting someone read the room first makes that invitation much easier to accept.</li><li><strong>Cost:</strong> medium: a role with no write permission, an expiry, and a clear marker that the visitor is a visitor.</li><li><strong>What it must not become:</strong> a public archive. A guest link expires, always.</li><li><strong>Falsifier:</strong> if guests never convert to members, the visit was the product, and a static page would have done.</li></ul>
+<h2>4. Time capsules</h2>
+<p>A message sealed until a date, then revealed to the channel.</p>
+<ul><li><strong>Why it fits:</strong> it is the only feature in this file that is purely for the pleasure of the place, and "talk slowly" tolerates a message that arrives in a year.</li><li><strong>Cost:</strong> low-medium: a hidden-message flag, a scheduled reveal job, and an honest "sealed on" state. The job ledger already exists.</li><li><strong>What it must not become:</strong> a way to say something without ever being accountable for it. A capsule names its author when it opens.</li><li><strong>Falsifier:</strong> if nobody seals one in the first month, it is a demo, not a feature.</li></ul>
+<h2>5. Watchwords</h2>
+<p>"Tell me when someone says this" — a phrase, a name, a channel, and a quiet notice when it appears.</p>
+<ul><li><strong>Why it fits:</strong> the index will exist after Q3, and this is the cheapest useful thing to build on top of it. It also gives a reason to open the app without being pinged.</li><li><strong>Cost:</strong> medium: a stored query per person, a per-message check, and a delivery that is a digest rather than a ping.</li><li><strong>What it must not become:</strong> surveillance. A watchword sees messages you can already read, and nothing else.</li><li><strong>Falsifier:</strong> if it fires more than a few times a week, people mute it and it was a filter, not a feature.</li></ul>
+<h2>6. Postcards</h2>
+<p>Render a message, or three, as an image worth sending to someone who is not in the room.</p>
+<ul><li><strong>Why it fits:</strong> every other idea keeps the conversation inside; this one lets a good exchange leave, carrying the mascot and the name with it.</li><li><strong>Cost:</strong> medium: a client-side render, a typographic layout that survives a phone, and a rule about what a postcard may contain.</li><li><strong>What it must not become:</strong> a screenshot tool for arguments. A postcard carries the message and the names the people involved already chose to publish.</li><li><strong>Falsifier:</strong> if nobody sends one out, the room prefers being private and that is an answer.</li></ul>
+<h2>7. Quiet hours</h2>
+<p>A window each person sets — say 22:00 to 08:00 — in which nothing pings, and a message that arrived overnight is waiting in the morning.</p>
+<ul><li><strong>Why it fits:</strong> wave six made the room quiet by default; this makes it quiet by schedule, which is the version people actually need.</li><li><strong>Cost:</strong> low: a per-user window, checked where notifications are already decided.</li><li><strong>What it must not become:</strong> a reason a message is silently dropped. The queue is visible.</li><li><strong>Falsifier:</strong> if nobody sets a window, mentions-only was enough and this is decoration.</li></ul>
+<h2>8. The reading garden</h2>
+<p>Chosen threads, exported to a page anyone can read, at <code>wizardry.slothlee.xyz/garden</code>.</p>
+<ul><li><strong>Why it fits:</strong> it is the only idea here that could make the place interesting to people who will never join.</li><li><strong>Cost:</strong> high: selection, redaction, a renderer, and the whole problem of consent for a conversation written in private.</li><li><strong>What it must not become:</strong> publishing by default. Nothing leaves the instance without the author of every message in the thread agreeing.</li><li><strong>Falsifier:</strong> it should not be built until there are threads worth reading, which is Q15 and a year of talking. <strong>Never, until then.</strong></li></ul>
+<h2>The one that could jump the queue</h2>
+<p>The bridge (§1) is the only idea in this file that could reasonably displace a queued item, because it changes the answer to "why would anyone come here" rather than improving the room for people already in it.</p>
+<p>It jumps only on one condition: that there is a named person in a named Discord channel who would use the bridged channel. Without that name, it is infrastructure for an audience that does not exist yet, which is the mistake this file exists to avoid repeating.</p>
+<h2>The count, again</h2>
+<p>Thirty-two distinct items, six built, nineteen queued, seven buried — and now eight parked, which makes forty. Nothing here is scheduled. If <code>BACKLOG.md</code>'s Q1 to Q4 are still unbuilt when this file is next opened, the correct response is to delete three ideas from it at random, not to add another: an idea that has survived a month of not being built is usually not waiting for its turn, it is waiting to be let go.</p></body></html>
