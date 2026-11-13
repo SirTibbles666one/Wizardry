@@ -18,7 +18,7 @@ html{color-scheme:dark}
   --text-on-dark:#e4efe2!important;
   --text-code:#e9dcc3!important;
   --text-warning:#e8c46a!important;
-  --text-link:#cbab6e!important;
+  --text-link:#d6b578!important;
   --text-link-hover:#eac97f!important;
   --interactive-muted:#6d8a6f!important;
 }
@@ -187,4 +187,26 @@ input:focus{border-color:rgba(224,180,92,.55)!important}
 .auth-page [class*="AuthLayout.module__mobileContent"]{padding-top:12vh;box-sizing:border-box}
 @media (max-height:700px){
   .auth-page [class*="AuthLayout.module__mobileContent"]{padding-top:6vh}
+}
+
+/* ---- the form gets a plane to sit on ---------------------------------- */
+/* The last critique that kept coming back: controls floating on art with no shared
+   surface. The form element itself is the right box — it wraps exactly the label,
+   the field, the button and the alternate action, and nothing else. */
+.auth-page form{
+  background:linear-gradient(180deg,rgba(13,26,18,.92),rgba(10,20,14,.88));
+  backdrop-filter:blur(20px) saturate(125%);
+  -webkit-backdrop-filter:blur(20px) saturate(125%);
+  border:1px solid rgba(184,208,178,.28);
+  border-radius:18px;
+  padding:22px 18px 20px;
+  box-shadow:0 24px 60px rgba(3,8,5,.55),0 2px 0 rgba(244,236,224,.05) inset,
+             0 -1px 0 rgba(0,0,0,.35) inset;
+}
+.auth-page [class*="AuthLayout.module__mobileContent"]{padding-top:20vh}
+/* a disabled action should read as wait, not as mud */
+.auth-page button[class*="primary"][disabled]{opacity:.82!important}
+.auth-page form::before{
+  content:'';display:block;height:1px;margin:-22px -18px 20px;
+  background:linear-gradient(90deg,transparent,rgba(224,180,92,.45),transparent);
 }
