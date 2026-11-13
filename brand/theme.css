@@ -134,3 +134,25 @@ input:focus{border-color:rgba(224,180,92,.55)!important}
 @media (prefers-reduced-motion: reduce){
   body::after,[class*="AuthBrandPanel"] img{animation:none!important}
 }
+
+/* ---- the login page, specifically ------------------------------------- */
+/* The backdrop exists only on the auth layout, so the motion lives there too:
+   a slow zoom on the artwork the app already positions, and a honey hairline
+   that draws itself under the wordmark. Both are transform/opacity only. */
+@keyframes wz-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes wz-hairline{0%{transform:scaleX(.2);opacity:0}30%{opacity:.85}60%{transform:scaleX(1);opacity:.85}100%{transform:scaleX(.2);opacity:0}}
+
+.auth-page [class*="AuthLayout.module__backdropImage"]{
+  animation:wz-breathe 64s ease-in-out infinite;
+  transform-origin:52% 30%;
+  will-change:transform;
+}
+.auth-page [class*="AuthBrandPanel.module__identity"]::after{
+  content:'';display:block;height:1px;width:64px;margin:12px auto 0;
+  background:linear-gradient(90deg,transparent,rgba(224,180,92,.9),transparent);
+  animation:wz-hairline 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  .auth-page [class*="AuthLayout.module__backdropImage"],
+  .auth-page [class*="AuthBrandPanel.module__identity"]::after{animation:none!important}
+}
