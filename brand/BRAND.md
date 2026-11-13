@@ -102,6 +102,18 @@ reproducible. The proxy injects it as `og:image` with explicit width and height,
 `twitter:card` to `summary_large_image`, and carries the tagline as `og:description` — the
 first place the line is published, since no branding field holds a description.
 
+## Quiet rules
+
+Four things this product does not do, written down so a future branch does not add them helpfully:
+
+- **No read receipts.** The absence is deliberate. Knowing that someone read your message and did
+  not answer is a pressure this place is not for.
+- **Typing indicators are never the ambient state of the room.** They may be switched on; they are
+  not the default background noise.
+- **An announcement does not ping.** A notice is something you find, not something that finds you.
+- **Nothing is summarised by a model.** Counts, first lines and dates are honest; a generated
+  summary of a conversation that invented a decision would be worse than silence.
+
 ## Voice
 
 One sentence, used wherever the instance describes itself: **"A private forest for people

@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — the quiet wave</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>Wizardry — the quiet wave</h1>
+<p>Sixth wave. Wave five ended by recommending that planning stop until a third person had used the instance for a week. This wave does not overrule that; it answers a different question.</p>
+<p>Wave five asked <em>what is missing</em>. This one asks <em>what this place is for</em>. The tagline is "a private forest for people who talk slowly", and almost every default a chat product ships is built for the opposite: typing echoes, pings, unread counts that shout, a composer that rewards speed. So the ideas here are not capabilities the product lacks in the abstract. They are the places where the product's defaults contradict its own sentence.</p>
+<p>Treat this document as a menu, not a queue. Wave five's build order stands and nothing here pre-empts it.</p>
+<h2>1. What was measured</h2>
+<p>Every claim below was checked against the fork's source, not against how a chat app usually behaves. The counts that looked promising and turned out to be nothing are listed too, because a wave that only prints its successes is a pitch.</p>
+<table><thead><tr><th>Claim</th><th>Evidence</th><th>Reading</th></tr></thead><tbody><tr><td>Guilds can already choose "mentions only" as the default for new members</td><td><code>DefaultNotificationsSection.tsx</code>, <code>MessageNotifications.ONLY_MENTIONS</code></td><td>The quiet default is a <strong>setting</strong>, not code — but it is per guild and set by hand</td></tr><tr><td>There is no instance-level default for a new guild or a new member</td><td>nothing writes <code>notificationLevel</code> outside the guild settings surface</td><td>gap</td></tr><tr><td>Typing indicators are rendered and have no display toggle</td><td><code>ChannelItem.tsx</code> renders <code>typingIndicator</code>; no <code>showTyping</code> setting exists</td><td>gap</td></tr><tr><td>No quiet hours, no scheduled do-not-disturb</td><td>zero hits for <code>quietHours</code>, <code>DoNotDisturb</code></td><td>gap</td></tr><tr><td>No digest of what happened while you were away</td><td>zero hits for <code>notificationDigest</code>, <code>DigestService</code>; the two "catch up" hits are message-boot caching</td><td>gap</td></tr><tr><td>Unread state already exists and is per channel</td><td><code>read_states</code> (5 rows), <code>ReadStateService</code></td><td>the data a catch-up panel needs is already written</td></tr><tr><td>No send-later</td><td>zero hits for <code>scheduledMessage</code>; the "schedule" hits are audit-log batch deletes</td><td>gap</td></tr><tr><td>Bookmarks exist; collections and export do not</td><td><code>BookmarksBottomSheet</code>, <code>requestToggleBookmark</code>, <code>MaxBookmarksModal</code>; no export path</td><td>gap, half-shipped</td></tr><tr><td>Presence already includes invisible</td><td><code>StatusConstants</code> — <code>online</code>, <code>dnd</code>, <code>idle</code>, <code>invisible</code>, <code>offline</code></td><td>the stance is available; the default is not</td></tr><tr><td>Slow mode exists as a rate limit</td><td><code>slowmodeThreadKey</code>, rate-limit service</td><td>a noticeboard can be built on it</td></tr></tbody></table>
+<h2>2. The six ideas</h2>
+<h3>2.1 Quiet by default, not by decision</h3>
+<p>A person who accepts an invite should not have to mute the place to enjoy it. Set the house defaults once, at the instance: new members arrive on mentions-only, new guilds start on mentions-only, and typing indicators are off in the channel list by default with a per-person switch to turn them back on.</p>
+<ul><li>The setting lives in instance configuration and is applied at join time, so it is one decision rather than a rule every member has to discover.</li><li>An existing member's choices are never rewritten by changing the default.</li><li>Typing indicators stay available; they stop being the ambient state of the room.</li><li>Nothing here changes what is delivered — only what arrives loudly.</li></ul>
+<h3>2.2 Catch-up: what happened while you were away</h3>
+<p>Open the app after two days and see one panel: how many messages arrived, in which channels, with the first line of each. Not a generated summary, not a notification, not an email.</p>
+<ul><li>Counts and first lines, taken from data that already exists; no model writes a word of it.</li><li>Reading the panel marks nothing as read. Leaving it does not consume anything.</li><li>If nothing happened, the panel does not appear — an empty state that says "no news" is a notification about the absence of notifications.</li><li>The panel is local to the client; nothing is stored server-side about when someone looked.</li></ul>
+<h3>2.3 Hold until morning</h3>
+<p>Write at midnight, deliver at eight. The message waits in a queue the sender can see and cancel, and when it lands it says when it was written.</p>
+<ul><li>The queue is visible and cancellable until the moment it sends.</li><li>If the app is closed when the time arrives, it sends on next open, stamped with the time it actually sent — never pretending the delay did not happen.</li><li>A held message is never shown as sent before it is.</li><li>One held message per channel at a time, so the queue cannot become a mailbox.</li></ul>
+<h3>2.4 Letters: a slower composer</h3>
+<p>The same message box, in a mode for paragraphs instead of lines: more generous spacing, a preview that reads like a page, no character counter ticking, and no live typing echo to the other person.</p>
+<ul><li>It is the same message underneath; a letter is a shape, not a new object.</li><li>The other person sees a letter as a letter, so the mode is honest rather than cosmetic.</li><li>No length limit is raised: this is about rhythm, and a raised limit is a different feature wearing the same name.</li><li>Available in every channel, never required anywhere.</li></ul>
+<h3>2.5 Keepsakes: collections of what you saved</h3>
+<p>Bookmarks exist and stop at a flat list. Collections group them — "the good arguments", "how we built the thing" — and export to plain markdown so the file is still readable in ten years.</p>
+<ul><li>Private by default; sharing a collection is a separate, deliberate act, and out of scope here.</li><li>Export is markdown with a date and channel on each entry, no proprietary structure and no styling that only we can render.</li><li>Deleting a message removes it from a collection rather than leaving a tombstone with a quote in it.</li></ul>
+<h3>2.6 The noticeboard</h3>
+<p>One channel per guild where people react but do not post: announcements, the handbook, the rules. Built from permissions and slow mode rather than a new channel type.</p>
+<ul><li>Reactions and threads on a post stay open; only top-level posting is closed.</li><li>It never pings <code>@everyone</code>, and an announcement carries no notification.</li><li>It is a permission pattern the owner can build today, so the feature is a <strong>preset</strong> — one button that configures it — not a new object.</li></ul>
+<h2>3. Order, if any of it is built</h2>
+<ol><li><strong>2.1</strong>, because it is configuration plus one display toggle and it sets the tone for everyone who arrives afterwards.</li><li><strong>2.2</strong>, because the data already exists and it is the feature a returning person notices.</li><li><strong>2.5</strong>, because it makes the first two months of conversation survivable.</li><li><strong>2.3</strong>, then <strong>2.4</strong>, then <strong>2.6</strong> — the three that change how writing feels.</li></ol>
+<p>Everything here needs an app build; 2.1 also needs an api build for the instance default. That puts the whole wave behind the pipeline work wave five opens.</p>
+<h2>4. Considered and rejected</h2>
+<ul><li><strong>Read receipts.</strong> The absence is the feature. Recorded as a stance in <code>BRAND.md</code> rather than planned as work, because the risk is a future contributor adding them helpfully.</li><li><strong>A digest by email.</strong> Email delivery was excluded by the owner; the panel in 2.2 is the same idea without leaving the app.</li><li><strong>A model-written summary of what you missed.</strong> It would be the most useful sentence in the product and the least trustworthy: a summary that invents a decision is worse than no summary.</li><li><strong>Longer message limits.</strong> Nothing in eleven messages suggests anyone has hit one.</li><li><strong>A second theme, or a light mode.</strong> The canopy palette is the identity; a light mode is a different product with the same assets.</li></ul>
+<h2>5. The honest bit</h2>
+<p>Running count: eighteen rows in wave three, six shipped, eight written in wave five, six here. That is thirty-two planned against six built, and this document makes the ratio worse rather than better.</p>
+<p>Wave five named the three things worth building next — the update offer, the offline page and the search truth — and none of them appear in this wave. That is deliberate. This wave is the answer to "what should this place feel like when it has people in it", and it has no evidence that it ever will.</p>
+<p>Falsifier: if the first guest does not come back for a second week, every idea here was aimed at the wrong problem, and the correct next document is one paragraph about why the instance is not being used rather than another six ideas. The sample that would make this wave meaningful is one person returning twice, unasked, and then five.</p>
+<h2>6. Decisions that are yours</h2>
+<ol><li><strong>Whether mentions-only becomes the house default</strong> — it is a strong opinion and it will make the instance feel quiet to someone who expected pings.</li><li><strong>Whether letters ship as a mode or as a channel type</strong>, which decides whether the idea is small or large.</li><li><strong>Whether the noticeboard is a preset or a promise</strong> — a preset is a button; a promise is a channel type we maintain for ever.</li></ol></body></html>
