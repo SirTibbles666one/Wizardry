@@ -62,7 +62,7 @@ remains outside the deliberately muted secondary line.
 **Not verified: every signed-in surface.** The composer, channel list, member sidebar, modals and
 settings screens all draw on the same token set, so they inherit the palette — but I cannot see
 them without an account, and a token being set is not the same as a screen looking right. This is
-the honest boundary of the work: *the palette is proven, the screens are not*.
+the honest boundary of the work: the palette is proven and the screens are not.
 
 ## What still needs an app build
 
