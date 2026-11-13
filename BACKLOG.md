@@ -38,7 +38,7 @@ of two or three sections written months apart in planning time.
 | Q2 | Offline page, and a queue for what was typed | w5 §3.2 | defect | app | airplane mode shows our page; a typed message sends on reconnect with the real send time |
 | Q3 | Search that is true: backfill on first use, say when it is filling | w2 §3.2, w5 §3.4 | defect | api, app | first search indexes nine channels; a cold index never renders as "no results" |
 | Q4 | The first hour: one welcome, and a handbook that is pinned | w1 §3.5, w3 §3.5, w5 §3.3, w7 §2.4 | feature | api, config | a fresh account receives exactly one message; three items are pinned in one channel |
-| Q5 | Identity kit: invite splash, banner, mascot emoji pack | w1 §3.6, w3 §3.3, w5 §3.5, w7 §2.3 | content | none | three fields non-null; the invite preview shows them as a guest would see them |
+| Q5 | Identity kit: invite splash, banner, mascot emoji pack | w1 §3.6, w3 §3.3, w5 §3.5, w7 §2.3 | content | none | art is built (`brand/banner.png` 960×540, `brand/splash.png` 1920×1080, `brand/emoji/` 12 faces); the three fields still need an owner session to fill, then the invite preview must show them as a guest would |
 | Q6 | Mail that matches the room | w3 §3.4, w5 §3.6 | content | api | a reset email shows the face, the wordmark, a plain-text part, and the correct host |
 | Q7 | An invite that reads like an invitation | w7 §2.1 | feature | app, api | an invite can be created, previewed, expires, and names who sent it |
 | Q8 | Operator panel: is it alive | w1 §3.4, w5 §3.7 | feature | app, api | the page shows build id, last backup age, index document counts; no secret appears in it |
