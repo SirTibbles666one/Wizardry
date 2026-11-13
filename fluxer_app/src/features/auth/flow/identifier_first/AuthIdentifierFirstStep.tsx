@@ -52,6 +52,11 @@ const SIGN_IN_OR_CREATE_DESCRIPTOR = msg({
 	message: 'Sign in or create an account',
 	comment: 'Heading of the single sign-in screen. The same screen signs people in and creates new accounts.',
 });
+const SIGN_IN_ONLY_DESCRIPTOR = msg({
+	message: 'Sign in',
+	comment:
+		'Heading of the sign-in screen when the instance does not accept new registrations, so nothing there creates an account.',
+});
 const CHECK_YOUR_EMAIL_DESCRIPTOR = msg({
 	message: 'Check your email',
 	comment: 'Heading of the sign-in step where people type the code we emailed them.',
@@ -131,6 +136,7 @@ export function AuthIdentifierFirstStep({
 	);
 	const emailCodes = runtimeSnapshot.features.email_codes === true;
 	const instantAccounts = offersInstantAccount(runtimeSnapshot.features, registrationUrlCode);
+	const registrationClosed = runtimeSnapshot.registration?.mode === 'closed' && !registrationUrlCode;
 	const consentConfig = useMemo(() => getRegistrationLegalConsentConfig(runtimeSnapshot), [runtimeSnapshot]);
 	const target = useMemo(() => instanceTargetFromSnapshot(runtimeSnapshot), [runtimeSnapshot]);
 	const [step, setStep] = useState<IdentifierStep>({kind: 'email'});
@@ -365,7 +371,16 @@ export function AuthIdentifierFirstStep({
 			runtimeSnapshot={runtimeSnapshot}
 			showTitle={showTitle}
 			extraTopContent={extraTopContent}
-			heading={showTitle ? renderHeading(title ?? i18n._(SIGN_IN_OR_CREATE_DESCRIPTOR)) : null}
+			heading={
+				showTitle
+					? renderHeading(
+							title ??
+								i18n._(
+									registrationClosed ? SIGN_IN_ONLY_DESCRIPTOR : SIGN_IN_OR_CREATE_DESCRIPTOR,
+								),
+						)
+					: null
+			}
 			notice={notice}
 			passkeyAvailable={passkeyAvailable}
 			passkeyDisabled={passkeyDisabled}
