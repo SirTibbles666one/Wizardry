@@ -39,11 +39,8 @@ have shown:
 Measured at 390×844: the primary button was **342×36 px**, under the 44 px floor that a thumb
 needs. It is now 44 px tall on phones and unchanged on desktop:
 
-```css
-@media (max-width: 640px){
-  [class*="Button.module__button"]{min-height:44px!important}
-}
-```
+On phones only, every button whose class begins with `Button.module__button` gets
+`min-height:44px!important`; desktop is untouched.
 
 Two things had to be true for that to work, and both are worth recording. The selector targets a
 **module class prefix** (`Button.module__button`), because the hash suffix changes every build and
