@@ -97,3 +97,40 @@ button,input,textarea,select,a,[role='button']{transition:background-color 140ms
 @media (prefers-reduced-data: reduce){
   [class*="backdrop" i]{background-image:none!important}
 }
+
+/* ---- the cute layer --------------------------------------------------- */
+/* Fireflies: one composited overlay, pointer-events:none, so nothing in the app
+   can be blocked by it and nothing repaints on scroll. The app sits above it. */
+@keyframes wz-drift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-16px,-12px,0)}100%{transform:translate3d(0,0,0)}}
+@keyframes wz-twinkle{0%,100%{opacity:.32}50%{opacity:.72}}
+@keyframes wz-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes wz-glow{0%,100%{box-shadow:0 0 0 1px rgba(224,180,92,.18)}50%{box-shadow:0 0 0 1px rgba(224,180,92,.42),0 0 22px rgba(224,180,92,.16)}}
+
+#root{position:relative;z-index:1}
+body::after{
+  content:'';position:fixed;inset:-12%;z-index:0;pointer-events:none;
+  background-repeat:no-repeat;
+  background-image:
+    radial-gradient(2.2px 2.2px at 12% 24%,rgba(224,180,92,.55),transparent 60%),
+    radial-gradient(1.8px 1.8px at 27% 68%,rgba(224,180,92,.42),transparent 60%),
+    radial-gradient(2.6px 2.6px at 41% 14%,rgba(244,236,224,.38),transparent 60%),
+    radial-gradient(1.6px 1.6px at 58% 82%,rgba(224,180,92,.45),transparent 60%),
+    radial-gradient(2.2px 2.2px at 66% 38%,rgba(244,236,224,.30),transparent 60%),
+    radial-gradient(1.9px 1.9px at 78% 62%,rgba(224,180,92,.40),transparent 60%),
+    radial-gradient(2.4px 2.4px at 88% 20%,rgba(244,236,224,.34),transparent 60%),
+    radial-gradient(1.7px 1.7px at 34% 44%,rgba(224,180,92,.35),transparent 60%);
+  animation:wz-drift 52s ease-in-out infinite,wz-twinkle 11s ease-in-out infinite;
+  will-change:transform,opacity;
+}
+
+/* the mascot breathes rather than sitting still on the brand panel */
+[class*="AuthBrandPanel"] img{animation:wz-bob 7s ease-in-out infinite;will-change:transform}
+
+/* a lantern behind the primary action when it is ready to be pressed */
+button[class*="primary"]:not([disabled]):hover{box-shadow:0 0 0 1px rgba(224,180,92,.35),0 8px 26px rgba(224,180,92,.22)}
+input:focus{border-color:rgba(224,180,92,.55)!important}
+
+/* quiet honour for people who asked the system not to move */
+@media (prefers-reduced-motion: reduce){
+  body::after,[class*="AuthBrandPanel"] img{animation:none!important}
+}
