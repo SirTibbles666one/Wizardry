@@ -27,7 +27,10 @@ ASSETS = [
     ("symbol", 512, 512),
     ("hero", 560, 680),
     ("wordmark", 1280, 320),
-    ("backdrop", 1920, 1080),
+    # the backdrop is NOT built here: make-backdrop.py owns brand/backdrop.png because it
+    # needs its own portrait canvas and seeded texture. Rendering it through this list at
+    # 1920x1080 silently squashes the portrait art into landscape.
+
     ("favicon", 64, 64),
     ("favicon-dark", 64, 64),
 ]
