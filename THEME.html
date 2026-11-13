@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — the theme, measured</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>The theme, measured</h1>
+<p>Theme v3 is live on <code>wizardry.slothlee.xyz</code>. It is applied as <code>branding.custom_css</code> on <code>app_public_config</code> — no image, no deploy — and the source of record is [<code>brand/theme.css</code>](./theme.css). This document says what it sets, what changed, and what it cannot prove.</p>
+<h2>Why a v3 at all</h2>
+<p>V2 set the brand colour and the three background surfaces, which was enough to make the sign-in page look like ours. Measuring the rendered page found three leaks that no colour picker would have shown:</p>
+<table><thead><tr><th>Symptom, measured on the live page</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td>Document background <code>rgb(8, 6, 22)</code> — a violet near-black — behind and around the app</td><td><code>--background-primary</code> was set, but <code>html</code>/<code>body</code> were not</td><td><code>html,body{background:#18271c}</code></td></tr><tr><td>Text <code>hsl(258, 10%, 96%)</code> — a violet-tinted white</td><td><code>--text-primary</code> untouched</td><td>the full ink scale, hue-free: <code>#e4efe2</code> / <code>#c3d4bf</code> / <code>#9db39a</code></td></tr><tr><td>Input borders <code>rgba(201,197,211,.15)</code> — violet-grey</td><td><code>--border-color</code> and the modifier variables untouched</td><td>canopy borders at <code>rgba(163,189,160,.20)</code></td></tr><tr><td><code>--font-display</code> empty</td><td>never declared, only <code>h1,h2,h3</code> was targeted directly</td><td>declared, so components that use the token get Baloo 2</td></tr></tbody></table>
+<h2>What v3 sets</h2>
+<ul><li><strong>Canvas</strong> — <code>#18271c</code> on <code>html</code> and <code>body</code>, <code>color-scheme: dark</code>, honey selection.</li><li><strong>Ink</strong> — a five-step green-neutral scale replacing the violet-tinted one, plus chat, code and warning colours.</li><li><strong>Surfaces</strong> — primary, secondary, secondary-alt, secondary-lighter, tertiary, header, textarea, and the four modifier states (hover, accent, selected, focus).</li><li><strong>Honey</strong> — the brand family, including the two variables that decide whether a button reads gold on gold: <code>--brand-primary-fill</code> and <code>--instance-brand-primary-fill</code> are the <strong>label</strong> colour.</li><li><strong>Type</strong> — <code>--font-sans</code>, <code>--font-sans-primary</code>, <code>--font-display</code>, plus element-level fallbacks so the first paint is right before React mounts.</li><li><strong>Chrome</strong> — scrollbars (thin, canopy thumb, honey on hover), <code>:focus-visible</code> ring at 85% honey, and 140 ms transitions on interactive elements.</li><li><strong>Restraint</strong> — <code>prefers-reduced-motion</code> kills the transitions, <code>prefers-reduced-data</code> drops the backdrop.</li></ul>
+<h2>The one thing v3 changed about behaviour</h2>
+<p>Measured at 390×844: the primary button was <strong>342×36 px</strong>, under the 44 px floor that a thumb needs. It is now 44 px tall on phones and unchanged on desktop:</p>
+<p>``<code>css @media (max-width: 640px){ [class*="Button.module__button"]{min-height:44px!important} } </code>``</p>
+<p>Two things had to be true for that to work, and both are worth recording. The selector targets a <strong>module class prefix</strong> (<code>Button.module__button</code>), because the hash suffix changes every build and a full class name is a rule that works until Thursday. And the declaration needs <code>!important</code>, because the injected stylesheet lands <em>before</em> the app's own sheets, so an equal-specificity rule of theirs wins on source order — the first attempt silently did nothing, and only re-measuring the button's box caught it.</p>
+<h2>What is verified, and what is not</h2>
+<p><strong>Verified by measurement on the live page</strong>, at 390×844 and 1440×900: document and body background, the ink scale, <code>--font-display</code>, the input border and focus ring, scrollbar colour, and the button's height. A screenshot was reviewed for palette coherence: no violet or grey cast remains outside the deliberately muted secondary line.</p>
+<p><strong>Not verified: every signed-in surface.</strong> The composer, channel list, member sidebar, modals and settings screens all draw on the same token set, so they inherit the palette — but I cannot see them without an account, and a token being set is not the same as a screen looking right. This is the honest boundary of the work: <em>the palette is proven, the screens are not</em>.</p>
+<h2>What still needs an app build</h2>
+<ol><li><strong>The auth composition sits top-heavy.</strong> At 390×844 the form occupies y=122 to y=294 and the lower 550 px is empty. Vertical centring is a layout change in a module the theme cannot reach safely.</li><li><strong>The disabled primary button fades to 50% opacity</strong>, which makes the CTA look muddy on an empty form. A disabled state should read as unavailable, not as a different colour.</li><li><strong>The passkey link and the primary button share the honey accent.</strong> Hierarchy currently rests on size and position alone; a secondary treatment for links would let the button own the accent.</li></ol>
+<p>Those three are in <code>BACKLOG.md</code> as Q20, because they need code and the queue is where code lives.</p></body></html>

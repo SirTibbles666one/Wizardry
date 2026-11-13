@@ -53,6 +53,7 @@ of two or three sections written months apart in planning time.
 | Q17 | One webhook, so the place is useful on a quiet day | w7 §2.6 | config | none | a feed channel receives a post without anyone typing, and can be muted as a unit |
 | Q18 | Polls, for the person who will not type | w7 §2.7 | config | none | one poll is run, answered and closed |
 | Q19 | A front door for strangers | w7 §2.8 | page | proxy | `/welcome` returns 200 with JavaScript off, carries no sign-up form, and names nobody's address |
+| Q20 | Auth composition and disabled states | THEME.md | polish | app | the sign-in form is centred at 390×844, a disabled button reads as unavailable rather than dimmed, and the passkey link stops sharing the accent |
 
 ## 3. The next three, with pass criteria
 

@@ -1,0 +1,99 @@
+@font-face{font-family:'Baloo 2';src:url(https://fonts.gstatic.com/s/baloo2/v23/wXKrE3kTposypRyd51jcAA.woff2) format('woff2');font-weight:400 800;font-display:swap}
+@font-face{font-family:'Nunito';src:url(https://fonts.gstatic.com/s/nunito/v32/XRXV3I6Li01BKofINeaB.woff2) format('woff2');font-weight:200 1000;font-display:swap}
+
+/* ---- canvas ---------------------------------------------------------- */
+html,body{background:#18271c!important}
+html{color-scheme:dark}
+::selection{background:rgba(224,180,92,.30)!important;color:#f4ece0!important}
+
+/* ---- ink ------------------------------------------------------------- */
+:root{
+  --text-primary:#e4efe2!important;
+  --text-secondary:#c3d4bf!important;
+  --text-tertiary:#9db39a!important;
+  --text-primary-muted:#b3c6b0!important;
+  --text-tertiary-muted:#869c84!important;
+  --text-chat:#e4efe2!important;
+  --text-chat-muted:#a9bda6!important;
+  --text-on-dark:#e4efe2!important;
+  --text-code:#e9dcc3!important;
+  --text-warning:#e8c46a!important;
+  --text-link:#e0b45c!important;
+  --text-link-hover:#eac97f!important;
+  --interactive-muted:#6d8a6f!important;
+}
+
+/* ---- surfaces -------------------------------------------------------- */
+:root{
+  --background-primary:#18271c!important;
+  --background-secondary:#1d3123!important;
+  --background-secondary-alt:#1a2b1f!important;
+  --background-secondary-lighter:#223a2a!important;
+  --background-tertiary:#213a2b!important;
+  --background-header-secondary:#1a2c20!important;
+  --background-textarea:#213a2b!important;
+  --background-modifier-hover:rgba(228,239,226,.06)!important;
+  --background-modifier-accent:rgba(163,189,160,.22)!important;
+  --background-modifier-selected:rgba(224,180,92,.14)!important;
+  --background-modifier-accent-focus:rgba(224,180,92,.34)!important;
+  --border-color:rgba(163,189,160,.20)!important;
+}
+
+/* ---- honey ----------------------------------------------------------- */
+:root{
+  --brand-primary:#e0b45c!important;
+  --brand-primary-light:#eac97f!important;
+  --brand-primary-shade:#b98a2e!important;
+  --brand-primary-fill:#16241a!important;
+  --brand-primary-foreground:#16241a!important;
+  --instance-brand-primary:#e0b45c!important;
+  --instance-brand-primary-light:#eac97f!important;
+  --instance-brand-primary-shade:#b98a2e!important;
+  --instance-brand-primary-fill:#16241a!important;
+  --instance-brand-primary-light-fill:#16241a!important;
+  --instance-brand-primary-foreground:#16241a!important;
+  --instance-text-on-brand-primary:#16241a!important;
+  --instance-text-on-brand-primary-light:#16241a!important;
+  --instance-brand-secondary:#a3bda0!important;
+  --instance-brand-tint:rgba(224,180,92,.12)!important;
+  --instance-brand-tint-hover:rgba(224,180,92,.20)!important;
+  --instance-brand-tint-border:rgba(224,180,92,.35)!important;
+  --instance-text-on-brand-tint:#e4efe2!important;
+}
+
+/* ---- type ------------------------------------------------------------ */
+:root{
+  --font-sans:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif!important;
+  --font-sans-primary:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif!important;
+  --font-display:'Baloo 2','Nunito',system-ui,sans-serif!important;
+}
+body,button,input,textarea,select{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif!important}
+h1,h2,h3,h4{font-family:'Baloo 2','Nunito',system-ui,sans-serif!important;letter-spacing:-.01em}
+
+/* ---- chrome ---------------------------------------------------------- */
+*{scrollbar-color:rgba(163,189,160,.34) transparent;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(163,189,160,.28);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(224,180,92,.45);background-clip:content-box}
+
+:focus-visible{outline:2px solid rgba(224,180,92,.85)!important;outline-offset:2px!important;border-radius:6px}
+
+button,input,textarea,select,a,[role='button']{transition:background-color 140ms ease,border-color 140ms ease,color 140ms ease,box-shadow 140ms ease}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:0.01ms!important;animation-duration:0.01ms!important;animation-iteration-count:1!important}
+}
+
+/* ---- phone ergonomics ------------------------------------------------- */
+/* Measured at 390x844: the primary button was 342x36, under the 44px touch floor.
+   Module class prefixes survive builds; full hashed names do not. */
+@media (max-width: 640px){
+  [class*="Button.module__button"]{min-height:44px!important}
+  [class*="Message.module"] [class*="avatar" i]{border-radius:10px}
+}
+
+/* ---- reduced data ----------------------------------------------------- */
+@media (prefers-reduced-data: reduce){
+  [class*="backdrop" i]{background-image:none!important}
+}
