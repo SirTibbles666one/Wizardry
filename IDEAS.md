@@ -38,6 +38,8 @@ One channel relayed to Discord and back, with names preserved and loops prevente
 - **What it must not become:** a two-way sync of every channel. One channel, named, both ways.
 - **Falsifier:** if nobody in the target Discord actually uses the bridged channel for a week, the
   bridge was a reason to avoid asking rather than a reason to build.
+- **Planned in full:** `PLAN-BRIDGE.md` — what it is, the three build shapes, loops, failures, the
+  outbound-afternoon MVP, and the privacy objection written plainly.
 
 ## 2. Mail that lands in a channel
 

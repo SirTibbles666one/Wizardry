@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Wizardry — the bridge</title><style>
+@page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.6pt; line-height: 1.52;
+       color: #14121c; margin: 0; }
+h1 { font-size: 21pt; margin: 0 0 6mm 0; color: #1b1330; letter-spacing: -0.01em; }
+h2 { font-size: 13pt; margin: 8mm 0 3mm; color: #1b1330; border-bottom: 1.5pt solid #e9b65a;
+     padding-bottom: 1.6mm; page-break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 5.5mm 0 2mm; color: #2c1d50; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: left; }
+em { color: #4a4360; }
+strong { color: #14121c; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: #f3f0ea;
+       padding: 0.3mm 1mm; border-radius: 1mm; }
+ul, ol { margin: 0 0 3mm 0; padding-left: 5.5mm; }
+li { margin: 0 0 1.4mm; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt;
+        page-break-inside: auto; }
+th { text-align: left; background: #1b1330; color: #f6f1e6; padding: 1.6mm 2mm; font-weight: 600; }
+td { border-bottom: 0.4pt solid #ddd8cc; padding: 1.5mm 2mm; vertical-align: top; }
+tr { page-break-inside: avoid; }
+hr { border: none; border-top: 0.6pt solid #ddd8cc; margin: 5mm 0; }
+</style></head><body><h1>The bridge: what it is, and what building it would mean</h1>
+<p>The short answer first, because the idea is easier to judge once it is concrete.</p>
+<p><strong>A bridge is a small program that sits between two chat systems and copies messages from one to the other, in one direction or both.</strong> Ours would connect one channel in Nightgrove to one channel in a Discord server, so a message typed in either place appears in both, carrying the name of the person who actually wrote it.</p>
+<table><thead><tr><th>Where</th><th>What happens</th></tr></thead><tbody><tr><td>Nightgrove, <code>#the-porch</code>, a server you own</td><td>someone types "evening all"</td></tr><tr><td>the bridge, one small process</td><td>reads it, and posts a copy on the other side</td></tr><tr><td>Discord, <code>#wizardry-bridge</code>, someone else's server</td><td>the copy appears, carrying the name of the person who typed it, and can be answered there</td></tr></tbody></table>
+<p>Nothing is shared behind the scenes. The bridge reads a message in one place and posts a copy in the other, with the original author's name attached. Two consequences follow from that, and they are the whole of the design: <strong>the copy is a copy</strong> (an edit in one place does not silently change the other unless we build that), and <strong>the message has left the building</strong> the moment it crosses.</p>
+<h2>1. What ours would do</h2>
+<table><thead><tr><th>Does</th><th>Does not</th></tr></thead><tbody><tr><td>Relay text both ways between one Nightgrove channel and one Discord channel</td><td>Relay every channel, or sync the guild's structure</td></tr><tr><td>Keep the sender's display name and avatar on the copy</td><td>Pretend the copy was written in the place it landed</td></tr><tr><td>Carry attachments as links or re-uploads, per a setting</td><td>Mirror attachments by default (storage and copyright)</td></tr><tr><td>Mark each copy as bridged, visibly</td><td>Hide that a message came from outside</td></tr><tr><td>Queue when either side is down, and say so</td><td>Drop messages silently</td></tr><tr><td>Forget ids after a retention window</td><td>Keep a permanent map of who said what where</td></tr></tbody></table>
+<p><strong>One channel. Named. Both ways. That is the whole scope</strong> — and the reason it is worth planning at all is that the people you would invite are already in a Discord, so the instance does not have to win an argument to be useful on its first day.</p>
+<h2>2. Three ways to build it, and what each costs</h2>
+<table><thead><tr><th>Shape</th><th>What it needs</th><th>Good</th><th>Bad</th></tr></thead><tbody><tr><td><strong>Outbound only, via a Discord webhook</strong></td><td>One Discord webhook URL; a Nightgrove webhook or bot to post from</td><td>An afternoon. No bot account, no gateway, no token to rotate</td><td>One-way. Discord cannot answer</td></tr><tr><td><strong>Two-way, with a Discord bot</strong></td><td>A Discord application and bot token from the Developer Portal (<strong>your hands</strong>), the message-content intent, a Nightgrove bot account</td><td>Real conversation across the boundary, names preserved</td><td>A week of work, two tokens to keep, Discord's rate limits to respect</td></tr><tr><td><strong>A hosted relay</strong> (Matterbridge-shaped)</td><td>A third service to run and patch</td><td>Existing tooling</td><td>Another daemon to own; its mapping rules are not ours</td></tr></tbody></table>
+<p>The recommendation is the first, then the second: <strong>ship outbound in an afternoon and discover whether anyone replies</strong>, before spending a week on the half that needs a bot token.</p>
+<h2>3. The hard parts, each with its rule</h2>
+<ul><li><strong>Identity.</strong> A copy must carry the original author's name, and must not create an account in Nightgrove for every Discord user — so a bridged message is <em>posted by the bridge</em> and <em>labelled with the author</em>. On the Discord side a webhook overrides the name and avatar, which is why the outbound half is cheap.</li><li><strong>Loops.</strong> The bridge must never re-post its own output. Every copy carries the id of the message it came from, and the bridge ignores anything carrying a bridged marker. This is the failure that melts a bridge in ten seconds if it is got wrong.</li><li><strong>Edits and deletes.</strong> In the MVP the copy is a copy: an edit does not chase. The bridge says so in its own docs rather than silently diverging. Deletes are the exception — a delete removes the copy, because leaving a deleted message readable outside is a privacy failure, not a staleness bug.</li><li><strong>Attachments.</strong> Links by default; a size ceiling; never a silent failure. A message whose attachment could not be mirrored still arrives with a note.</li><li><strong>Rate limits.</strong> Discord enforces per-channel limits and will punish a hammer; the bridge queues and drains, and a backlog is visible on the Nightgrove side rather than lost.</li><li><strong>Backfill.</strong> Turning a bridge on does not replay history. A channel starts empty on the far side and says so.</li></ul>
+<h2>4. Failure modes, and what a person sees</h2>
+<table><thead><tr><th>When</th><th>What happens</th><th>What the person sees</th></tr></thead><tbody><tr><td>Discord is down</td><td>The bridge queues; Nightgrove keeps working</td><td>Copies arrive late, with their original times</td></tr><tr><td>The token is revoked</td><td>The bridge stops and refuses to retry blindly</td><td>A one-line notice in the bridged channel</td></tr><tr><td>A loop is detected</td><td>The bridge halts that channel rather than spinning</td><td>A notice, and nothing is re-posted</td></tr><tr><td>A copy fails validation</td><td>That message is skipped and logged</td><td>A gap, with a note in the channel's log</td></tr><tr><td>The bridge process dies</td><td>Nothing is copied until it returns</td><td>Messages resume; the gap is reported</td></tr></tbody></table>
+<p>The rule underneath all of them: <strong>a bridge that fails quietly is worse than no bridge</strong>, because people keep talking into a void.</p>
+<h2>5. The MVP, with pass criteria</h2>
+<p><strong>Step one — outbound, in an afternoon, no bot token.</strong> A Nightgrove webhook posts into a Discord webhook; every message in one channel crosses.</p>
+<ul><li>Pass: a message typed in Nightgrove appears in Discord within five seconds, with the right name, and a second message does not appear twice.</li><li>Fails if: the copy carries the bridge's name instead of the author's, or a restart duplicates anything already sent.</li></ul>
+<p><strong>Step two — inbound, about a week.</strong> A Discord bot listens on one channel and posts into Nightgrove through a bot account.</p>
+<ul><li>Pass: a message typed in Discord appears in Nightgrove within five seconds, labelled as bridged, and a reply typed in Nightgrove reaches Discord without a loop.</li><li>Fails if: any message round-trips twice, or a Discord user's name is used to impersonate them into a Nightgrove conversation they are not part of.</li></ul>
+<h2>6. What it costs to run</h2>
+<p>A process, two secrets, and a table of message ids with a retention window. The process is small enough to live on the existing machine; the secrets are the part that needs care, and the token is yours to create and revoke.</p>
+<h2>7. The real objection: the message leaves</h2>
+<p>Everything else in this plan keeps conversation inside a server you own. A bridge puts a copy of your conversation on someone else's infrastructure, under their terms, and a Discord user reading the bridged channel sees the Nightgrove side without ever joining.</p>
+<p>That is not a technical problem to solve; it is a decision to make. What the plan should carry, if it is built:</p>
+<ul><li>The channel is named as bridged, and every copy says where it came from.</li><li>Nothing is bridged by default; a channel is chosen, by you, one at a time.</li><li>Anything said in the bridged channel should be treated as public to both rooms. Said plainly, in the channel's topic, rather than buried in a document.</li><li>Turning the bridge off leaves no copy behind on the far side — or leaves the whole history, one of the two, and never a half-deleted thread.</li></ul>
+<h2>8. The gate</h2>
+<p>The idea jumps the queue only if <strong>a named person, in a named Discord channel, would use the bridged room.</strong> Without that name it is infrastructure for an audience that does not exist, which is the exact mistake <code>IDEAS.md</code> was written to avoid.</p>
+<p>So the honest sequence is:</p>
+<ol><li>Name the person and the channel.</li><li>Build step one — an afternoon, outbound only.</li><li>Watch for a week. If nobody replies in Discord, stop: the bridge answered a question nobody asked, and the week step two would have taken belongs to the queue.</li><li>If they do reply, step two is justified, and the queue gains its first real contender.</li></ol>
+<h2>9. Decisions that are yours</h2>
+<ol><li><strong>The person and the channel</strong> — the gate above, and the only one that matters first.</li><li><strong>One channel or two</strong>: a dedicated bridged room, or the bridge woven into an existing one.</li><li><strong>Attachments</strong>: links, re-uploads, or refused.</li></ol></body></html>
