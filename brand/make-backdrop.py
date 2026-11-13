@@ -63,10 +63,10 @@ def svg() -> str:
     return f"""<svg viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="night" cx="72%" cy="18%" r="92%">
-      <stop offset="0%" stop-color="#3d6247"/>
-      <stop offset="34%" stop-color="#2b4735"/>
-      <stop offset="66%" stop-color="#2a4534"/>
-      <stop offset="100%" stop-color="#1c3223"/>
+      <stop offset="0%" stop-color="#4c7d5b"/>
+      <stop offset="34%" stop-color="#376046"/>
+      <stop offset="66%" stop-color="#2b4b38"/>
+      <stop offset="100%" stop-color="#22402d"/>
     </radialGradient>
     <radialGradient id="moonglow" cx="0.5" cy="0.5" r="0.5">
       <stop offset="0%" stop-color="#e8c46a" stop-opacity="0.30"/>
@@ -80,7 +80,7 @@ def svg() -> str:
     </linearGradient>
     <radialGradient id="vignette" cx="50%" cy="46%" r="72%">
       <stop offset="62%" stop-color="#000000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.16"/>
     </radialGradient>
     <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
       <stop offset="0%" stop-color="#0c1810" stop-opacity="0.72"/>
