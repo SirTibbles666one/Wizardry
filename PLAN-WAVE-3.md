@@ -179,7 +179,7 @@ below, which is why they are recorded here rather than applied.
 | — | Theme: Sloth Lee canopy palette, Baloo 2 + Nunito | 0 | **shipped** |
 | — | Mascot: wizard sloth, six assets, two size variants | 0 | **shipped** |
 | — | Guild renamed **Nightgrove**, with audit entry | 3 | **shipped** |
-| 1.1 | Invite-only front door | 1 | blocked: owner's choice (§7 wave 1) |
+| 1.1 | Invite-only front door | 1 | **shipped** — `registration.mode = closed`, admin links on |
 | 1.2 | Backup that runs without me + one restore drill | 1 | **next to build** |
 | 1.3 | Restart gate | 1 | planned |
 | 1.4 | Operator CLI (`brand`, `own`, `audit`) | 1 | planned |
