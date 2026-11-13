@@ -192,11 +192,11 @@ below, which is why they are recorded here rather than applied.
 | 2.5 | A call actually made | 2 | needs two devices |
 | 2.6 | Desktop build, or strike the claim | 2 | planned (0 releases) |
 | 3.1 | Manifest splash colour | 3 | **shipped** — `#18271c`, verified |
-| 3.2 | Link card | 3 | planned |
+| 3.2 | Link card | 3 | **shipped** — 1200×630 card, tagline, summary_large_image |
 | 3.3 | Guild art (name done: **Nightgrove**) | 3 | art needs one upload by the owner |
 | 3.4 | Branded transactional mail | 3 | planned |
 | 3.5 | First-run copy | 3 | planned |
-| 3.6 | Blank screen that says nothing | 3 | **watchdog shipped**; custom offline page still planned |
+| 3.6 | Blank screen that says nothing | 3 | **watchdog shipped**; offline page and update offer still planned (wave 5) |
 | — | AAAA record for IPv6 clients | — | blocked: no Cloudflare token |
 
 Two items in that table are not plans but defects: **2.2** (search indexes nothing) and
