@@ -65,8 +65,8 @@ def svg() -> str:
     <radialGradient id="night" cx="72%" cy="18%" r="92%">
       <stop offset="0%" stop-color="#3d6247"/>
       <stop offset="34%" stop-color="#2b4735"/>
-      <stop offset="66%" stop-color="#1d3325"/>
-      <stop offset="100%" stop-color="#101f16"/>
+      <stop offset="66%" stop-color="#2a4534"/>
+      <stop offset="100%" stop-color="#1c3223"/>
     </radialGradient>
     <radialGradient id="moonglow" cx="0.5" cy="0.5" r="0.5">
       <stop offset="0%" stop-color="#e8c46a" stop-opacity="0.30"/>
@@ -80,7 +80,7 @@ def svg() -> str:
     </linearGradient>
     <radialGradient id="vignette" cx="50%" cy="46%" r="72%">
       <stop offset="62%" stop-color="#000000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.22"/>
     </radialGradient>
     <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
       <stop offset="0%" stop-color="#0c1810" stop-opacity="0.72"/>
@@ -110,13 +110,13 @@ def svg() -> str:
 
   <!-- canopy: far layer, blurred, then nearer layers that bite into frame -->
   {leaves(46, (-90, 320), (70, 190), 0, "#25422f", 0.9, 40)}
-  {leaves(38, (-60, 260), (55, 150), 0, "#193024", 0.95, 18)}
-  {leaves(30, (-70, 190), (45, 120), 0, "#0e1f16", 1.0, 6)}
+  {leaves(38, (-60, 260), (55, 150), 0, "#12241a", 0.97, 18)}
+  {leaves(30, (-70, 190), (45, 120), 0, "#06120b", 1.0, 6)}
 
   <!-- undergrowth, rising from the bottom edge -->
   {leaves(44, (H - 430, H + 90), (80, 220), 0, "#24422e", 0.95, 40)}
-  {leaves(38, (H - 330, H + 70), (60, 170), 0, "#17301f", 1.0, 18)}
-  {leaves(30, (H - 250, H + 50), (50, 140), 0, "#0a1810", 1.0, 6)}
+  {leaves(38, (H - 330, H + 70), (60, 170), 0, "#0f2116", 1.0, 18)}
+  {leaves(30, (H - 250, H + 50), (50, 140), 0, "#050f09", 1.0, 6)}
 
   <!-- mist bands across the quiet middle -->
   <rect x="0" y="{H * 0.42:.0f}" width="{W}" height="{H * 0.22:.0f}" fill="url(#mist)"/>
@@ -127,7 +127,7 @@ def svg() -> str:
   <g>{"".join(fireflies)}</g>
 
   <!-- grain, then vignette on top of everything -->
-  <rect width="{W}" height="{H}" filter="url(#grain)" opacity="0.06"/>
+  <rect width="{W}" height="{H}" filter="url(#grain)" opacity="0.08"/>
   <ellipse cx="{W * 0.5:.0f}" cy="{H * 0.30:.0f}" rx="{W * 0.62:.0f}" ry="{H * 0.24:.0f}" fill="url(#pool)"/>
   <rect width="{W}" height="{H}" fill="url(#vignette)"/>
 </svg>"""

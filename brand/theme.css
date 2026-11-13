@@ -173,3 +173,18 @@ input:focus{border-color:rgba(224,180,92,.55)!important}
 }
 .auth-page a{text-decoration-color:transparent}
 .auth-page a:hover{text-decoration-color:currentColor}
+
+/* ---- let the forest show through -------------------------------------- */
+/* Upstream scrims the backdrop with rgba(5,4,13,.75) — a violet black at 75%, which
+   is why the art was invisible and the page read as "starfield on nothing". This is
+   a canopy scrim at 45% with a soft gradient, so the canopies and moon survive. */
+.auth-page [class*="AuthLayout.module__backdropScrim"]{
+  background-color:rgba(10,22,15,.28)!important;
+  /* light at the edges where the canopies are, heavier behind the form */
+  background-image:linear-gradient(180deg,rgba(9,20,13,.10) 0%,rgba(10,24,16,.46) 34%,rgba(10,24,16,.40) 62%,rgba(8,18,12,.06) 100%)!important;
+}
+/* the form was pinned to the top third on phones; give it air above */
+.auth-page [class*="AuthLayout.module__mobileContent"]{padding-top:12vh;box-sizing:border-box}
+@media (max-height:700px){
+  .auth-page [class*="AuthLayout.module__mobileContent"]{padding-top:6vh}
+}
